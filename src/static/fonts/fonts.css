@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'NotoSansKR';
+  font-display: fallback;
+
+  src: url('./NotoSansKR-Regular.ttf'),
+  url('./NotoSansKR-Light.ttf'),
+  url('./NotoSansKR-Thin.ttf'),
+  url('./NotoSansKR-Medium.ttf'),
+  url('./NotoSansKR-Bold.ttf'),
+  url('./NotoSansKR-Black.ttf');
+
+  font-weight: 400;
+  font-style: normal;
+}
