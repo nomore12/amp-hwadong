@@ -4,6 +4,10 @@ import './index.css';
 import Cursor from 'src/components/Cursor';
 import MouseContextProvider from './components/context/MouseContext';
 import { animateScroll } from 'react-scroll';
+import Amplify, { Auth } from 'aws-amplify';
+import config from './aws-exports';
+
+Auth.configure(config);
 
 function App() {
   useEffect(() => {
