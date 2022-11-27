@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Authenticator, Text } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { API, Amplify, graphqlOperation } from 'aws-amplify';
+import { API, Amplify } from 'aws-amplify';
 import config from '../aws-exports';
 import { Button } from '@aws-amplify/ui-react';
 

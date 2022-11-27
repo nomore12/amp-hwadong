@@ -30,7 +30,9 @@ const awsmobile = {
     },
     "aws_cognito_verification_mechanisms": [
         "EMAIL"
-    ]
+    ],
+    "aws_user_files_s3_bucket": "amp-hwadong-storage-74a639ac74950-staging",
+    "aws_user_files_s3_bucket_region": "ap-northeast-2"
 };
 
 

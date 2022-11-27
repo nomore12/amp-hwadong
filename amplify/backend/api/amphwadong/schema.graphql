@@ -1,9 +1,22 @@
+enum ImagePostType {
+  WCO
+  ETC
+}
+
+type ImagePost @model @auth(rules: [{allow: public, operations: [read]}, {allow: owner}]) {
+  id: ID!
+  desc: String
+  type: ImagePostType
+  images: AWSJSON
+  createdAt: AWSDate
+}
+
 enum Type {
   NOTICE
   REPORT
 }
 
-type Posts @model @auth(rules: [{allow: public}]) {
+type Posts @model @auth(rules: [{allow: public, operations: [read]}, {allow: owner}]) {
   id: ID!
   title: String
   desc: String

@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3amphwadongstorage74a639ac",
+  "bucketName": "amp-hwadong-storage-74a639ac",
+  "policyUUID": "9abfcb95",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

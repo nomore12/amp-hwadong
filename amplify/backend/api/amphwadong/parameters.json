@@ -2,5 +2,11 @@
   "AppSyncApiName": "amphwadong",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2022-11-27T10:19:26.792Z"
+  "AuthModeLastUpdated": "2022-11-27T17:57:03.634Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authamphwadong227e75c1",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

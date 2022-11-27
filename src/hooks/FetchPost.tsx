@@ -18,7 +18,7 @@ const useFetchPost = () => {
         uuid: item['id'],
         subject: item['title'],
         createdAt: item['createdAt'],
-        id: index,
+        id: index + 1,
       };
     });
     setList(lists);
