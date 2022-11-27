@@ -10,6 +10,7 @@ import {
 import Landing from 'src/pages/Landing';
 import Main from 'src/pages/Main';
 import NoticeContent from 'src/components/content/subContent/NoticeContent';
+import Login from '../pages/Login';
 
 const Router = () => {
   return (
@@ -17,6 +18,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/main/*" element={<Main />}></Route>
+        <Route path="/login" element={<Login />}></Route>
         {/*<Route path="/main/:id" element={<Main />}></Route>*/}
       </Routes>
     </BrowserRouter>
