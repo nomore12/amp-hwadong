@@ -31,6 +31,7 @@ import Hong from './contents/subContents/Hong';
 import BoardContent from 'src/components/contents/subContents/BoardContent';
 import { animateScroll } from 'react-scroll';
 import Overlay from './Overlay';
+import useFetchPost from '../hooks/FetchPost';
 
 // @ts-ignore
 const ContainerStyle = styled(motion.div)<{ color: string }>`
@@ -150,6 +151,7 @@ const Layout = () => {
   const location = useLocation();
   const params = useParams();
   const [innderWidth, setinnerWidth] = useState(0);
+  const postList = useFetchPost();
 
   const backToMainPage = (e: React.MouseEvent<HTMLDivElement>) => {
     if (cursor.curr === 'main' || isMobile) return;
@@ -177,7 +179,6 @@ const Layout = () => {
     if (pos) {
       animateScroll.scrollTo(Number(pos), { duration: 0 });
     }
-    console.log(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -212,7 +213,7 @@ const Layout = () => {
   }, [window.innerWidth]);
 
   useEffect(() => {
-    console.log(params);
+    console.log(postList);
   }, []);
 
   return (
@@ -270,7 +271,7 @@ const Layout = () => {
                 <p className="mobile-subject">공지사항</p>
                 <section id="공지사항">
                   <ContentContainer>
-                    {<Board boardType="공지사항" lists={listDummy} />}
+                    {<Board boardType="공지사항" lists={postList} />}
                   </ContentContainer>
                 </section>
                 <p className="mobile-subject">연간 사업보고</p>

@@ -10,7 +10,9 @@ import {
 import Landing from 'src/pages/Landing';
 import Main from 'src/pages/Main';
 import NoticeContent from 'src/components/content/subContent/NoticeContent';
-import Login from '../pages/Login';
+import Login from 'src/pages/Login';
+import PostCreate from 'src/pages/PostCreate';
+import GalleryCreate from 'src/pages/GalleryCreate';
 
 const Router = () => {
   return (
@@ -19,6 +21,8 @@ const Router = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/main/*" element={<Main />}></Route>
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/post" element={<PostCreate />}></Route>
+        <Route path="/gallery" element={<GalleryCreate />}></Route>
         {/*<Route path="/main/:id" element={<Main />}></Route>*/}
       </Routes>
     </BrowserRouter>
