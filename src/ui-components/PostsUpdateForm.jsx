@@ -186,6 +186,7 @@ export default function PostsUpdateForm(props) {
         label="Created at"
         isRequired={false}
         isReadOnly={false}
+        type="date"
         defaultValue={createdAt}
         onChange={(e) => {
           let { value } = e.target;

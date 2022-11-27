@@ -7,6 +7,7 @@ type Posts @model @auth(rules: [{allow: public}]) {
   id: ID!
   title: String
   desc: String
-  createdAt: String
+  createdAt: AWSDate
   type: Type
 }
+ 

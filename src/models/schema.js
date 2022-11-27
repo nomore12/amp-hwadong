@@ -27,7 +27,7 @@ export const schema = {
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
-                    "type": "String",
+                    "type": "AWSDate",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -86,5 +86,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.2",
-    "version": "4d14f2d4d5fb752dcc5ed85dee6c97ce"
+    "version": "4e5771049271def789a355b51ea25a5d"
 };

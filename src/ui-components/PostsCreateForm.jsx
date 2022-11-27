@@ -172,6 +172,7 @@ export default function PostsCreateForm(props) {
         label="Created at"
         isRequired={false}
         isReadOnly={false}
+        type="date"
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
