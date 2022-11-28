@@ -13,6 +13,7 @@ import NoticeContent from 'src/components/content/subContent/NoticeContent';
 import Login from 'src/pages/Login';
 import PostCreate from 'src/pages/PostCreate';
 import GalleryCreate from 'src/pages/GalleryCreate';
+import PostUpdate from '../pages/PostUpdate';
 
 const Router = () => {
   return (
@@ -22,6 +23,7 @@ const Router = () => {
         <Route path="/main/*" element={<Main />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/post" element={<PostCreate />}></Route>
+        <Route path="/post/:id" element={<PostUpdate />}></Route>
         <Route path="/gallery" element={<GalleryCreate />}></Route>
         {/*<Route path="/main/:id" element={<Main />}></Route>*/}
       </Routes>

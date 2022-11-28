@@ -49,8 +49,8 @@ export default function PostsCreateForm(props) {
     setErrors({});
   };
   const validations = {
-    title: [],
-    desc: [],
+    title: [{ type: "Required" }],
+    desc: [{ type: "Required" }],
     createdAt: [],
     type: [],
   };
@@ -117,8 +117,8 @@ export default function PostsCreateForm(props) {
       {...getOverrideProps(overrides, "PostsCreateForm")}
     >
       <TextField
-        label="Title"
-        isRequired={false}
+        label="제목"
+        isRequired={true}
         isReadOnly={false}
         onChange={(e) => {
           let { value } = e.target;
@@ -143,8 +143,8 @@ export default function PostsCreateForm(props) {
         {...getOverrideProps(overrides, "title")}
       ></TextField>
       <TextAreaField
-        label="Desc"
-        isRequired={false}
+        label="게시글"
+        isRequired={true}
         isReadOnly={false}
         onChange={(e) => {
           let { value } = e.target;
@@ -169,7 +169,7 @@ export default function PostsCreateForm(props) {
         {...getOverrideProps(overrides, "desc")}
       ></TextAreaField>
       <TextField
-        label="Created at"
+        label="생성일"
         isRequired={false}
         isReadOnly={false}
         type="date"
@@ -196,7 +196,7 @@ export default function PostsCreateForm(props) {
         {...getOverrideProps(overrides, "createdAt")}
       ></TextField>
       <SelectField
-        label="Type"
+        label="공지사항 / 연간사업보고"
         placeholder="Please select an option"
         isDisabled={false}
         value={type}

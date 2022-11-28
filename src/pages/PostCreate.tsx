@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import {
   Authenticator,
   Pagination,
@@ -20,6 +21,8 @@ import * as mutation from '../graphql/mutations';
 import { listPosts } from '../graphql/queries';
 import PostsCreateForm, {
   PostsCreateFormInputValues,
+  PostsCreateFormValidationValues,
+  ValidationResponse,
 } from '../ui-components/PostsCreateForm';
 import { Type } from '../models';
 
@@ -41,27 +44,33 @@ const options = {
 const PostCreate = () => {
   const [list, setList] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
-  const [formData, setFormData] = useState<PostsCreateFormInputValues>({
-    title: '',
-    desc: '',
-    createdAt: '',
-    type: Type.NOTICE,
-  });
+  const [type, setType] = useState('ALL');
+  const navigate = useNavigate();
+
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
     const posts = await API.graphql(graphqlOperation(listPosts));
-    // setList(typeof posts);
     const { data } = { ...posts } as any;
+    // console.log('fetching ', data.listPosts.items);
     setList(data.listPosts.items);
   };
 
+  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setType(e.target.value);
+  };
+
   const onPostChange = (data: PostsCreateFormInputValues) => {
-    setFormData(data);
     return data;
   };
 
+  const onPostSuccess = (data: PostsCreateFormInputValues) => {
+    const { listData } = { ...data } as any;
+    console.log('success', listData);
+    setList(listData);
+    data && fetchPost();
+  };
+
   const onPostSubmit = (data: PostsCreateFormInputValues) => {
-    // const newPost = createPost(formData);
     return data;
   };
 
@@ -89,12 +98,17 @@ const PostCreate = () => {
               <PostsCreateForm
                 onChange={onPostChange}
                 onSubmit={onPostSubmit}
+                onSuccess={onPostSuccess}
+                clearOnSuccess
               />
             </TabItem>
             {/* table */}
             <TabItem title="목록 보기">
-              <SelectField label="타입" descriptiveText="dddd">
-                <option value="all">모두</option>
+              <SelectField
+                label="공지사항 및 연간사업보고"
+                // descriptiveText="공지사항 및 연간사업보고"
+                onChange={onSelectChange}>
+                {/*<option value="all">모두</option>*/}
                 <option value="NOTICE">공지사항</option>
                 <option value="REPORT">사업보고</option>
               </SelectField>
@@ -112,19 +126,29 @@ const PostCreate = () => {
                       .sort((prev, next) =>
                         prev['createdAt'] > next['createdAt'] ? -1 : 1
                       )
+                      .filter((item) => {
+                        return type === 'ALL'
+                          ? item['type']
+                          : type === item['type'];
+                      })
                       .map((item, index) => {
+                        // console.log(item);
                         return (
                           <TableRow key={index}>
-                            <TableCell onClick={() => alert(item['title'])}>
+                            <TableCell onClick={() => navigate(item['id'])}>
                               {item['title']}
                             </TableCell>
-                            <TableCell>{item['type']}</TableCell>
-                            <TableCell>{item['createdAt']}</TableCell>
+                            <TableCell onClick={() => navigate(item['id'])}>
+                              {item['type']}
+                            </TableCell>
+                            <TableCell onClick={() => navigate(item['id'])}>
+                              {item['createdAt']}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
                 </TableBody>
-                <Pagination currentPage={1} totalPages={10} siblingCount={1} />
+                {/*<Pagination currentPage={1} totalPages={10} siblingCount={1} />*/}
               </Table>
             </TabItem>
           </Tabs>

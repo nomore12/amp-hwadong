@@ -129,7 +129,7 @@ export default function PostsUpdateForm(props) {
       {...getOverrideProps(overrides, "PostsUpdateForm")}
     >
       <TextField
-        label="Title"
+        label="제목"
         isRequired={false}
         isReadOnly={false}
         defaultValue={title}
@@ -156,7 +156,7 @@ export default function PostsUpdateForm(props) {
         {...getOverrideProps(overrides, "title")}
       ></TextField>
       <TextAreaField
-        label="Desc"
+        label="게시글"
         isRequired={false}
         isReadOnly={false}
         defaultValue={desc}
@@ -183,7 +183,7 @@ export default function PostsUpdateForm(props) {
         {...getOverrideProps(overrides, "desc")}
       ></TextAreaField>
       <TextField
-        label="Created at"
+        label="생성일"
         isRequired={false}
         isReadOnly={false}
         type="date"
@@ -211,7 +211,7 @@ export default function PostsUpdateForm(props) {
         {...getOverrideProps(overrides, "createdAt")}
       ></TextField>
       <SelectField
-        label="Type"
+        label="공지사항 / 연간사업보고"
         placeholder="Please select an option"
         isDisabled={false}
         value={type}
