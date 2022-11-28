@@ -3,7 +3,7 @@ enum ImagePostType {
   ETC
 }
 
-type ImagePost @model @auth(rules: [{allow: public, operations: [read]}, {allow: owner}]) {
+type ImagePost @model @auth(rules: [{allow: public}]) {
   id: ID!
   desc: String
   type: ImagePostType
@@ -16,7 +16,7 @@ enum Type {
   REPORT
 }
 
-type Posts @model @auth(rules: [{allow: public, operations: [read]}, {allow: owner}]) {
+type Posts @model @auth(rules: [{allow: public}]) {
   id: ID!
   title: String
   desc: String

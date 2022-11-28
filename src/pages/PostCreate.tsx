@@ -61,18 +61,13 @@ const PostCreate = () => {
   };
 
   const onPostSubmit = (data: PostsCreateFormInputValues) => {
-    // console.log(data);
-    createPost(data);
+    // const newPost = createPost(formData);
     return data;
   };
 
   async function createPost(data: PostsCreateFormInputValues) {
     const newPost = await API.graphql(
-      graphqlOperation(mutation.createPosts, {
-        input: formData,
-        // authMode: 'API_KEY',
-        // authToken: apiKey,
-      })
+      graphqlOperation(mutation.createPosts, { input: { ...data } })
     );
   }
 
