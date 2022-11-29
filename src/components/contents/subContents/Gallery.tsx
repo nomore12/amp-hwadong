@@ -8,6 +8,7 @@ import { animateScroll, Events } from 'react-scroll';
 import styled from 'styled-components';
 import { isMobile } from 'react-device-detect';
 import arrow from 'src/static/images/logo.svg';
+// import { Carousel } from '';
 
 const ContainerStyle = styled.div`
   display: flex;
