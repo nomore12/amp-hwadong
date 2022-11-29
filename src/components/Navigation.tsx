@@ -116,29 +116,29 @@ const Navigation = () => {
   };
 
   useEffect(() => {
-    // console.log(document.documentElement.clientWidth);
-    // if (document.documentElement.clientWidth > 1300) {
-    //   setMenu1(false);
-    //   setMenu2(false);
-    //   setMenu3(false);
-    //   // return;
-    // } else {
-    //   if (
-    //     ['설립목적', '연혁', '사업내용', '위치 및 연락처'].includes(subject)
-    //   ) {
-    //     setMenu1(true);
-    //     setMenu2(false);
-    //     setMenu3(false);
-    //   } else if (['재단활동소개', '재단활동아카이브'].includes(subject)) {
-    //     setMenu1(false);
-    //     setMenu2(true);
-    //     setMenu3(false);
-    //   } else if (['공지사항', '연간사업보고', '자료실'].includes(subject)) {
-    //     setMenu1(false);
-    //     setMenu2(false);
-    //     setMenu3(true);
-    //   }
-    // }
+    console.log(document.documentElement.clientWidth);
+    if (document.documentElement.clientWidth > 1300) {
+      setMenu1(false);
+      setMenu2(false);
+      setMenu3(false);
+      // return;
+    } else {
+      if (
+        ['설립목적', '연혁', '사업내용', '위치 및 연락처'].includes(subject)
+      ) {
+        setMenu1(true);
+        setMenu2(false);
+        setMenu3(false);
+      } else if (['재단활동소개', '재단활동아카이브'].includes(subject)) {
+        setMenu1(false);
+        setMenu2(true);
+        setMenu3(false);
+      } else if (['공지사항', '연간사업보고', '자료실'].includes(subject)) {
+        setMenu1(false);
+        setMenu2(false);
+        setMenu3(true);
+      }
+    }
   }, [subject]);
 
   return (

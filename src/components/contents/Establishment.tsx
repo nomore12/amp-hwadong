@@ -6,11 +6,12 @@ interface PropsType {}
 
 const ContainerStyle = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.9rem;
   font-weight: 400;
-  width: 480px;
+  //width: 480px;
   line-height: 2.5rem;
 
   p {

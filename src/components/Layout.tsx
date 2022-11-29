@@ -94,6 +94,7 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     width: 100%;
     //border: 1px solid black;
     position: relative;
+    pointer-events: none;
 
     @media screen and (max-width: 1230px) {
       display: none;
