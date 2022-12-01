@@ -153,6 +153,8 @@ const Layout = () => {
   const params = useParams();
   const [innderWidth, setinnerWidth] = useState(0);
   const postList = useFetchPost();
+  const noticeList = postList.filter((item: any) => item['type'] === 'NOTICE');
+  const reportList = postList.filter((item: any) => item['type'] === 'REPORT');
 
   const backToMainPage = (e: React.MouseEvent<HTMLDivElement>) => {
     if (cursor.curr === 'main' || isMobile) return;
@@ -272,13 +274,13 @@ const Layout = () => {
                 <p className="mobile-subject">공지사항</p>
                 <section id="공지사항">
                   <ContentContainer>
-                    {<Board boardType="공지사항" lists={postList} />}
+                    {<Board boardType="공지사항" lists={noticeList} />}
                   </ContentContainer>
                 </section>
                 <p className="mobile-subject">연간 사업보고</p>
                 <section id="연간사업보고">
                   <ContentContainer>
-                    {<Board boardType="연간사업보고" lists={listDummy} />}
+                    {<Board boardType="연간사업보고" lists={reportList} />}
                   </ContentContainer>
                 </section>
               </div>

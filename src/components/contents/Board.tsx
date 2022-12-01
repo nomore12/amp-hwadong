@@ -3,9 +3,15 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import ListItem from '../common/ListItem';
 import useSubjectReplacer from '../../hooks/SubjectReplacer';
+import { itemHasText } from '@aws-amplify/ui-react/dist/types/primitives/Collection/utils';
 
 interface PropsType {
-  lists: Array<{ id: number; subject: string; createdAt: string }>;
+  lists: Array<{
+    id: number;
+    subject: string;
+    createdAt: string;
+    uuid: string;
+  }>;
   boardType: string;
 }
 
@@ -37,6 +43,8 @@ const Board = ({ boardType, lists }: PropsType) => {
               index={item.id}
               subject={item.subject}
               createdAt={item.createdAt}
+              type={boardType}
+              uuid={item.uuid}
             />
           );
         })}

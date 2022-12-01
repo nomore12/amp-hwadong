@@ -60,7 +60,7 @@ const PostCreate = () => {
 
     const posts = await API.graphql({
       query: listPosts,
-      variables: { type: type, limit: 15 },
+      // variables: { type: type, limit: 15 },
     });
     const { data } = { ...posts } as any;
     setList(data.listPosts.items);

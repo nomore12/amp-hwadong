@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -6,6 +6,8 @@ interface PropsType {
   index: number;
   subject: string;
   createdAt: string;
+  type: string;
+  uuid: string;
 }
 
 const ContainerStyle = styled.li`
@@ -50,11 +52,13 @@ const ContainerStyle = styled.li`
   }
 `;
 
-const ListItem = ({ index, subject, createdAt }: PropsType) => {
+const ListItem = ({ index, subject, createdAt, type, uuid }: PropsType) => {
+  const [postType, setPostType] = useState(type);
+
   return (
     <ContainerStyle>
       <Link
-        to="/main/notice/1"
+        to={`/main/notice/${uuid}`}
         className="board-list-item"
         onClick={() => {
           localStorage.setItem(

@@ -14,6 +14,7 @@ interface PropsType {
   content?: string;
   imgUrl: string;
   type: string;
+  uuid: string;
 }
 
 const ContainerStyle = styled.div`
@@ -89,6 +90,8 @@ const BoardContent = () => {
         index={1}
         subject={'홈페이지 오픈 준비중입니다.'}
         createdAt={'2022-11-13'}
+        type={location.pathname === '/main/notice' ? 'NOTICE' : 'REPORT'}
+        uuid={'ddd'}
       />
       <p className="board-content-area">{'홈페이지 오픈 준비중입니다.'}</p>
     </ContainerStyle>
