@@ -228,8 +228,8 @@ const Layout = () => {
   useEffect(() => {
     dispatch(setNotices(noticeList));
     dispatch(setReports(reportList));
-    dispatch(setCurrNoticeIndex(0));
-    dispatch(setCurrReportIndex(0));
+    dispatch(setCurrNoticeIndex(1));
+    dispatch(setCurrReportIndex(1));
   }, [postList]);
 
   return (

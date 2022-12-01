@@ -69,12 +69,11 @@ const BoardContent = () => {
     const { data } = { ...post } as any;
     setContentData(data.getPosts);
     setLoading(false);
-    console.log('fetch: ', data.getPosts);
   };
 
   useEffect(() => {
     animateScroll.scrollToTop();
-    fetchPost().then((data) => console.log(data));
+    fetchPost();
 
     dispatch(changeCurr('archive'));
     dispatch(changeText('back'));

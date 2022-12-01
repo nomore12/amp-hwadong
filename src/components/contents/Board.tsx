@@ -6,7 +6,11 @@ import useSubjectReplacer from '../../hooks/SubjectReplacer';
 import { itemHasText } from '@aws-amplify/ui-react/dist/types/primitives/Collection/utils';
 import { Pagination } from '@aws-amplify/ui-react';
 import { useAppDispatch, useAppSelector } from '../../store/Hooks';
-import { setCurrNoticeIndex, setCurrReportIndex } from '../../store/Slice';
+import {
+  setCurrNoticeIndex,
+  setCurrReportIndex,
+  setNotices,
+} from '../../store/Slice';
 
 interface PropsType {
   lists: Array<{
@@ -41,16 +45,20 @@ const Board = ({ boardType, lists }: PropsType) => {
   const postInfo = useAppSelector((state) => state.posts);
   const dispatch = useAppDispatch();
   const [currPage, setCurrPage] = useState(1);
-  // const [currList, setCurrList] = useState<List[] | undefined>();
+  // const [currList, setCurrList] = useState<any[]>();
+  // const [loading, setLoading] = useState(true);
 
-  const currList = lists.slice(
-    boardType === '공지사항'
-      ? postInfo.currNoticeIndex
-      : postInfo.currReportIndex,
-    boardType === '공지사항'
-      ? postInfo.currNoticeIndex + 10
-      : postInfo.currReportIndex + 10
-  );
+  // const currList = lists.slice(
+  //   boardType === '공지사항'
+  //     ? postInfo.currNoticeIndex
+  //     : postInfo.currReportIndex,
+  //   boardType === '공지사항'
+  //     ? postInfo.currNoticeIndex + 10
+  //     : postInfo.currReportIndex + 10
+  // );
+
+  const currList =
+    boardType === '공지사항' ? postInfo.currNotices : postInfo.currReports;
 
   useSubjectReplacer({
     ref: ref,
@@ -58,32 +66,33 @@ const Board = ({ boardType, lists }: PropsType) => {
   });
 
   const onPaginationChange = (newIndex: number, prevIndex: number) => {
+    setCurrPage(newIndex);
     dispatch(
       boardType === '공지사항'
-        ? setCurrNoticeIndex(newIndex + 10)
-        : setCurrReportIndex(newIndex + 10)
+        ? setCurrNoticeIndex(newIndex)
+        : setCurrReportIndex(newIndex)
     );
-    setCurrPage(
-      boardType === '공지사항'
-        ? postInfo.currNoticeIndex + 1
-        : postInfo.currReportIndex + 1
-    );
-    console.log(postInfo);
+    // console.log(
+    //   'onChange',
+    //   currPage,
+    //   ', newIndex: ',
+    //   newIndex,
+    //   postInfo.currNotices
+    // );
   };
 
-  useEffect(() => {
-    console.log(boardType, ': ', postInfo.notices);
-    return () => {
-      dispatch(setCurrNoticeIndex(1));
-      dispatch(setCurrReportIndex(1));
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(setCurrNoticeIndex(1));
+  //     dispatch(setCurrReportIndex(1));
+  //   };
+  // }, [currPage]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       <ContainerStyle ref={ref} className="board">
         {currList &&
-          currList.map((item, index) => {
+          currList.map((item: any, index) => {
             return (
               <ListItem
                 key={index}
@@ -99,7 +108,7 @@ const Board = ({ boardType, lists }: PropsType) => {
       <Pagination
         onChange={onPaginationChange}
         currentPage={currPage}
-        // siblingCount={3}
+        siblingCount={3}
         totalPages={Math.ceil(
           boardType === '공지사항'
             ? postInfo.notices.length / 10

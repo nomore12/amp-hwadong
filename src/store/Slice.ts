@@ -29,6 +29,8 @@ interface ContentListState {
   currReportIndex: number;
   notices: PostType[];
   reports: PostType[];
+  currNotices: PostType[];
+  currReports: PostType[];
 }
 
 const subjectInitialState: SubjectState = {
@@ -49,6 +51,8 @@ const postContentListState = {
   currReportIndex: 0,
   notices: [],
   reports: [],
+  currNotices: [],
+  currReports: [],
 };
 
 export const subjectSlice = createSlice({
@@ -90,15 +94,29 @@ export const postSlice = createSlice({
   reducers: {
     setNotices: (state, action: PayloadAction<PostType[]>) => {
       state.notices = [...action.payload] as any;
+      const begin = 0;
+      const end =
+        state.notices.length >= 10 ? 10 : Math.ceil(state.notices.length / 10);
+      state.currNotices = state.notices.slice(begin, end);
     },
     setReports: (state, action: PayloadAction<PostType[]>) => {
       state.reports = [...action.payload] as any;
+      const begin = 0;
+      const end =
+        state.reports.length >= 10 ? 10 : Math.ceil(state.reports.length / 10);
+      state.currReports = state.reports.slice(begin, end);
     },
     setCurrNoticeIndex: (state, action: PayloadAction<number>) => {
       state.currNoticeIndex = action.payload;
+      const begin = (action.payload - 1) * 10;
+      const end = begin + 10;
+      state.currNotices = [...state.notices.slice(begin, end)];
     },
     setCurrReportIndex: (state, action: PayloadAction<number>) => {
       state.currReportIndex = action.payload;
+      const begin = (action.payload - 1) * 10;
+      const end = begin + 10;
+      state.currReports = [...state.reports.slice(begin, end)];
     },
   },
 });
