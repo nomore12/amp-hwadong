@@ -8,7 +8,7 @@ import {
   useLocation,
   useParams,
 } from 'react-router-dom';
-import { useAppSelector } from 'src/store/Hooks';
+import { useAppDispatch, useAppSelector } from 'src/store/Hooks';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import MobileNavigation from './MobileNavigation';
@@ -32,6 +32,15 @@ import BoardContent from 'src/components/contents/subContents/BoardContent';
 import { animateScroll } from 'react-scroll';
 import Overlay from './Overlay';
 import useFetchPost from '../hooks/FetchPost';
+import {
+  postSlice,
+  setCurrNoticeIndex,
+  setCurrReportIndex,
+  setNotices,
+  setReports,
+  subjectSlice,
+} from '../store/Slice';
+import notice from './content/Notice';
 
 // @ts-ignore
 const ContainerStyle = styled(motion.div)<{ color: string }>`
@@ -144,6 +153,7 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
 
 const Layout = () => {
   const subject = useAppSelector((state) => state.subject);
+  const dispatch = useAppDispatch();
   const cursor = useAppSelector((state) => state.cursor);
   const overlay = useAppSelector((state) => state.overlay.enabled);
   const navigate = useNavigate();
@@ -216,8 +226,11 @@ const Layout = () => {
   }, [window.innerWidth]);
 
   useEffect(() => {
-    console.log(postList);
-  }, []);
+    dispatch(setNotices(noticeList));
+    dispatch(setReports(reportList));
+    dispatch(setCurrNoticeIndex(0));
+    dispatch(setCurrReportIndex(0));
+  }, [postList]);
 
   return (
     <ContainerStyle

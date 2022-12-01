@@ -165,7 +165,7 @@ const PostCreate = () => {
                 </TableBody>
                 <Button>이전</Button>
                 <Button>다음</Button>
-                {/*<Pagination currentPage={1} totalPages={10} siblingCount={1} />*/}
+                <Pagination currentPage={1} totalPages={10} siblingCount={1} />
               </Table>
             </TabItem>
           </Tabs>

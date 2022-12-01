@@ -94,12 +94,24 @@ export const postSlice = createSlice({
     setReports: (state, action: PayloadAction<PostType[]>) => {
       state.reports = [...action.payload] as any;
     },
+    setCurrNoticeIndex: (state, action: PayloadAction<number>) => {
+      state.currNoticeIndex = action.payload;
+    },
+    setCurrReportIndex: (state, action: PayloadAction<number>) => {
+      state.currReportIndex = action.payload;
+    },
   },
 });
 
 export const { changeSubject } = subjectSlice.actions;
 export const { changeText, changeCurr } = cursorSlice.actions;
 export const { onOffOverlay } = overlaySlice.actions;
+export const {
+  setNotices,
+  setReports,
+  setCurrNoticeIndex,
+  setCurrReportIndex,
+} = postSlice.actions;
 export const getSubject = (state: RootState) => state.subject;
 export const getCurrState = (state: RootState) => state.cursor.curr;
 export const [subjectReducer, cursorReducer, overlayReducer, postReducer] = [

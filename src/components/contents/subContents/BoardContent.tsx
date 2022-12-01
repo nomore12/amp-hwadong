@@ -6,6 +6,8 @@ import { animateScroll } from 'react-scroll';
 import { useAppDispatch } from '../../../store/Hooks';
 import useMouseEventHook from '../../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as queries from 'src/graphql/queries';
 
 interface PropsType {
   id?: number;
@@ -46,6 +48,8 @@ const BoardContent = () => {
   const { onMouseEnter, onMouseLeave, navigateToPage } = useMouseEventHook();
   const location = useLocation();
   const [type, setType] = useState('');
+  const [contentData, setContentData] = useState<any>();
+  const [loading, setLoading] = useState(true);
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -57,7 +61,21 @@ const BoardContent = () => {
     );
   };
 
+  const fetchPost = async () => {
+    const post = await API.graphql({
+      query: queries.getPosts,
+      variables: { id: param.id },
+    });
+    const { data } = { ...post } as any;
+    setContentData(data.getPosts);
+    setLoading(false);
+    console.log('fetch: ', data.getPosts);
+  };
+
   useEffect(() => {
+    animateScroll.scrollToTop();
+    fetchPost().then((data) => console.log(data));
+
     dispatch(changeCurr('archive'));
     dispatch(changeText('back'));
     dispatch(
@@ -78,22 +96,24 @@ const BoardContent = () => {
       );
       window.removeEventListener('focus', eventListener);
     };
-  }, []);
-
-  useEffect(() => {
-    animateScroll.scrollToTop();
-  }, []);
+  }, [loading]);
 
   return (
     <ContainerStyle>
-      <ListItem
-        index={1}
-        subject={'홈페이지 오픈 준비중입니다.'}
-        createdAt={'2022-11-13'}
-        type={location.pathname === '/main/notice' ? 'NOTICE' : 'REPORT'}
-        uuid={'ddd'}
-      />
-      <p className="board-content-area">{'홈페이지 오픈 준비중입니다.'}</p>
+      {loading ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          <ListItem
+            index={1}
+            subject={contentData.title}
+            createdAt={contentData.createdAt}
+            type={contentData.type}
+            uuid={contentData.id}
+          />
+          <p className="board-content-area">{contentData.desc}</p>
+        </>
+      )}
     </ContainerStyle>
   );
 };

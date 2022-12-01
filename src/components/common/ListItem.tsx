@@ -14,6 +14,7 @@ const ContainerStyle = styled.li`
   align-self: flex-end;
   width: 100%;
   font-size: 0.8rem;
+  //padding: 2px 0;
 
   .board-list-item {
     display: flex;
@@ -21,7 +22,7 @@ const ContainerStyle = styled.li`
     margin: 0;
     max-width: 640px;
     border-top: 1px solid rgba(39, 39, 42, 0.6);
-    padding: 2px 0;
+    padding: 5px 0;
 
     .list-item__index,
     .list-item__subject,

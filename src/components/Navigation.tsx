@@ -93,7 +93,6 @@ const Navigation = () => {
   const subject = useAppSelector((state) => state.subject.subject);
 
   const onMenuClick = (index: number) => {
-    console.log('menu click');
     switch (index) {
       case 1:
         setMenu1(!menu1);
@@ -116,7 +115,6 @@ const Navigation = () => {
   };
 
   useEffect(() => {
-    console.log(document.documentElement.clientWidth);
     if (document.documentElement.clientWidth > 1300) {
       setMenu1(false);
       setMenu2(false);
