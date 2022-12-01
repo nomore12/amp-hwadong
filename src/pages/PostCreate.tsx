@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {
   Authenticator,
+  Button,
   Pagination,
   SelectField,
   TabItem,
@@ -18,7 +19,7 @@ import {
 import '@aws-amplify/ui-react/styles.css';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutation from '../graphql/mutations';
-import { listPosts } from '../graphql/queries';
+import { listPosts, listPosts as LISTPOSTS } from '../graphql/queries';
 import PostsCreateForm, {
   PostsCreateFormInputValues,
   PostsCreateFormValidationValues,
@@ -41,18 +42,31 @@ const options = {
   },
 };
 
+const PAGINATION_LIMIT = 10;
+
 const PostCreate = () => {
   const [list, setList] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [type, setType] = useState('ALL');
+  const [startedAt, setStartedAt] = useState<string | null>(null);
+  const [nextToken, setNextToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
-    const posts = await API.graphql(graphqlOperation(listPosts));
+    // const posts = await API.graphql(graphqlOperation(listPosts));
+    // const { data } = { ...posts } as any;
+    // setList(data.listPosts.items);
+
+    const posts = await API.graphql({
+      query: listPosts,
+      variables: { type: type, limit: 15 },
+    });
     const { data } = { ...posts } as any;
-    // console.log('fetching ', data.listPosts.items);
     setList(data.listPosts.items);
+    setStartedAt(data.listPosts?.startedAt);
+    setNextToken(data.listPosts.nextToken);
+    console.log(data.listPosts);
   };
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -82,7 +96,7 @@ const PostCreate = () => {
 
   useEffect(() => {
     fetchPost();
-  }, []);
+  }, [tabIndex, type]);
 
   return (
     <Authenticator loginMechanisms={['email']}>
@@ -99,7 +113,7 @@ const PostCreate = () => {
                 onChange={onPostChange}
                 onSubmit={onPostSubmit}
                 onSuccess={onPostSuccess}
-                clearOnSuccess
+                clearOnSuccess={false}
               />
             </TabItem>
             {/* table */}
@@ -109,6 +123,7 @@ const PostCreate = () => {
                 // descriptiveText="공지사항 및 연간사업보고"
                 onChange={onSelectChange}>
                 {/*<option value="all">모두</option>*/}
+                <option value="ALL">모두보기</option>
                 <option value="NOTICE">공지사항</option>
                 <option value="REPORT">사업보고</option>
               </SelectField>
@@ -132,7 +147,7 @@ const PostCreate = () => {
                           : type === item['type'];
                       })
                       .map((item, index) => {
-                        // console.log(item);
+                        // if (index + 1 > PAGINATION_LIMIT) return null;
                         return (
                           <TableRow key={index}>
                             <TableCell onClick={() => navigate(item['id'])}>
@@ -148,6 +163,8 @@ const PostCreate = () => {
                         );
                       })}
                 </TableBody>
+                <Button>이전</Button>
+                <Button>다음</Button>
                 {/*<Pagination currentPage={1} totalPages={10} siblingCount={1} />*/}
               </Table>
             </TabItem>
