@@ -35,6 +35,8 @@ const ContainerStyle = styled.div`
     font-weight: 300;
     padding-top: 1rem;
     text-align: start;
+    font-size: 0.8rem;
+    line-height: 1.6rem;
   }
 
   & * {

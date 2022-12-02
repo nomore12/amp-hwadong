@@ -75,7 +75,13 @@ const Board = ({ boardType, lists }: PropsType) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        marginBottom: '80px',
+      }}>
       <ContainerStyle ref={ref} className="board">
         {currList &&
           currList.map((item: any, index) => {

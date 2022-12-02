@@ -74,7 +74,7 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     left: 0;
     display: none;
     width: 100%;
-    padding: 1rem 0 0 1rem;
+    padding: 1rem 1rem 1.5rem 1rem;
     background-color: ${(props) => (props.color ? props.color : '#fff')};
     transition: background-color 1000ms linear;
 
