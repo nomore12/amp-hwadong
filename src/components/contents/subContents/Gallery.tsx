@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
+// import { Carousel } from 'react-responsive-carousel';
 import { useAppDispatch, useAppSelector } from '../../../store/Hooks';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
 import * as Scroll from 'react-scroll';
@@ -8,7 +8,9 @@ import { animateScroll, Events } from 'react-scroll';
 import styled from 'styled-components';
 import { isMobile } from 'react-device-detect';
 import arrow from 'src/static/images/logo.svg';
-// import { Carousel } from '';
+import Carousel from 'nuka-carousel';
+import { ReactComponent as ArrowLeft } from 'src/static/images/arrow.svg';
+import { ReactComponent as ArrowRight } from 'src/static/images/arrowRight.svg';
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -47,6 +49,24 @@ const ContainerStyle = styled.div`
       //background: black;
     }
   }
+  .carousel-desc {
+    margin-top: 2rem;
+    text-align: end;
+  }
+
+  .slider-control-bottomcenter {
+    position: absolute;
+    bottom: 50px;
+
+    ul {
+      gap: 1rem;
+      li {
+        button {
+          fill: white !important;
+        }
+      }
+    }
+  }
 `;
 
 const imgArr = [
@@ -75,13 +95,6 @@ const Gallery = () => {
     dispatch(changeText('back'));
     dispatch(changeSubject('갤러리'));
 
-    const arrow = document.querySelector('.control-arrow');
-    // const elem = document.createElement('div');
-    // elem.innerHTML = 'dd';
-    // arrow ? arrow.insertBefore(elem, null) : null;
-    // arrow.
-    // arrow ? arrow.before(elem) : null;
-
     return () => {
       dispatch(changeCurr('main'));
       dispatch(changeText(''));
@@ -94,26 +107,57 @@ const Gallery = () => {
   };
   return (
     <ContainerStyle>
-      <div className="">
+      <div className={`carousel-item`}>
         <Carousel
-          className="gallery-carousel"
-          // width="300px"
-          showStatus={false}
-          showThumbs={false}
-          autoPlay
-          infiniteLoop
-          interval={5000}
-          onChange={onChange}>
+          autoplay
+          autoplayInterval={5000}
+          pauseOnHover
+          wrapAround
+          cellSpacing={20}
+          className={`carousel-item`}
+          renderCenterLeftControls={({ previousDisabled, previousSlide }) => (
+            <button
+              className="carousel-item"
+              onClick={previousSlide}
+              disabled={previousDisabled}>
+              <ArrowLeft
+                className="carousel-item"
+                width="24px"
+                style={{
+                  marginLeft: '16px',
+                  pointerEvents: 'none',
+                  opacity: '0.7',
+                }}
+              />
+            </button>
+          )}
+          renderCenterRightControls={({ nextDisabled, nextSlide }) => (
+            <button
+              className="carousel-item"
+              onClick={nextSlide}
+              disabled={nextDisabled}>
+              <ArrowRight
+                className="carousel-item"
+                width="24px"
+                style={{
+                  marginRight: '16px',
+                  pointerEvents: 'none',
+                  opacity: '0.7',
+                }}
+              />
+            </button>
+          )}>
           {imgArr &&
             imgArr.map((item, key) => {
               return (
                 <div key={key} className={`carousel-item ${item.desc}`}>
-                  <img src={item.img} />
+                  <img src={item.img} className={`carousel-item`} />
+                  <p className={`carousel-item carousel-desc`}>{item.desc}</p>
                 </div>
               );
             })}
         </Carousel>
-        <p>{desc}</p>
+        {/*<p>{desc}</p>*/}
       </div>
     </ContainerStyle>
   );
