@@ -66,7 +66,6 @@ const PostCreate = () => {
     setList(data.listPosts.items);
     setStartedAt(data.listPosts?.startedAt);
     setNextToken(data.listPosts.nextToken);
-    console.log(data.listPosts);
   };
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

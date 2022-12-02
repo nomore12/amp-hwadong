@@ -15,7 +15,6 @@ function App() {
     const posts = await API.graphql(graphqlOperation(listPosts));
     // setList(typeof posts);
     const { data } = { ...posts } as any;
-    console.log(data);
   };
 
   useEffect(() => {

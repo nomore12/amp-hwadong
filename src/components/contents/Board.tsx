@@ -72,21 +72,7 @@ const Board = ({ boardType, lists }: PropsType) => {
         ? setCurrNoticeIndex(newIndex)
         : setCurrReportIndex(newIndex)
     );
-    // console.log(
-    //   'onChange',
-    //   currPage,
-    //   ', newIndex: ',
-    //   newIndex,
-    //   postInfo.currNotices
-    // );
   };
-
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(setCurrNoticeIndex(1));
-  //     dispatch(setCurrReportIndex(1));
-  //   };
-  // }, [currPage]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>

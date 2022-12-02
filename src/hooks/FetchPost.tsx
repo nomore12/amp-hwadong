@@ -13,7 +13,6 @@ const useFetchPost = () => {
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
     const posts = await API.graphql(graphqlOperation(listPosts));
-    // setList(typeof posts);
     const { data } = { ...posts } as any;
     const lists = data.listPosts.items.map((item: any, index: any) => {
       return {

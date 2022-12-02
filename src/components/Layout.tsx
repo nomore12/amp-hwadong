@@ -242,7 +242,13 @@ const Layout = () => {
       {overlay && <Overlay />}
       <Navigation />
       <div className="web-logo">
-        <img src={logo} alt="logo" width="232px" />
+        <button
+          className="home-button"
+          onClick={() => {
+            navigate('/');
+          }}>
+          <img src={logo} alt="logo" width="232px" />
+        </button>
       </div>
       <div className="mobile-logo" onClick={() => navigate('/main')}>
         <img src={logo} alt="logo" width="128px" />
