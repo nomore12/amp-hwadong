@@ -46,8 +46,14 @@ const Login = () => {
           <Button
             variation="primary"
             size="large"
-            onClick={() => moveTo('post')}>
-            공지사항 / 사업보고 글쓰기
+            onClick={() => moveTo('post/notice')}>
+            공지사항 글쓰기
+          </Button>
+          <Button
+            variation="primary"
+            size="large"
+            onClick={() => moveTo('post/report')}>
+            사업보고 글쓰기
           </Button>
           <Button
             variation="primary"

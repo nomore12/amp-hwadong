@@ -22,7 +22,12 @@ const Router = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/main/*" element={<Main />}></Route>
         <Route path="/login" element={<Login />}></Route>
-        <Route path="/post" element={<PostCreate />}></Route>
+        <Route
+          path="/post/notice"
+          element={<PostCreate postType="NOTICE" />}></Route>
+        <Route
+          path="/post/report"
+          element={<PostCreate postType="REPORT" />}></Route>
         <Route path="/post/:id" element={<PostUpdate />}></Route>
         <Route path="/gallery" element={<GalleryCreate />}></Route>
         {/*<Route path="/main/:id" element={<Main />}></Route>*/}

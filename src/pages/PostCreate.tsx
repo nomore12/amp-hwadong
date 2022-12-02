@@ -27,6 +27,10 @@ import PostsCreateForm, {
 } from '../ui-components/PostsCreateForm';
 import { Type } from '../models';
 
+interface PropsType {
+  postType: string;
+}
+
 const ContainerStyle = styled.div`
   width: 100%;
   display: flex;
@@ -44,7 +48,7 @@ const options = {
 
 const PAGINATION_LIMIT = 10;
 
-const PostCreate = () => {
+const PostCreate = ({ postType }: PropsType) => {
   const [list, setList] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [type, setType] = useState('ALL');
@@ -77,14 +81,17 @@ const PostCreate = () => {
   };
 
   const onPostSuccess = (data: PostsCreateFormInputValues) => {
-    const { listData } = { ...data } as any;
-    console.log('success', listData);
-    setList(listData);
+    alert('작성이 완료되었습니다.');
+    setTabIndex(1);
     data && fetchPost();
   };
 
   const onPostSubmit = (data: PostsCreateFormInputValues) => {
-    return data;
+    const result = {
+      ...data,
+      type: postType,
+    } as PostsCreateFormInputValues;
+    return result;
   };
 
   async function createPost(data: PostsCreateFormInputValues) {
@@ -101,7 +108,12 @@ const PostCreate = () => {
     <Authenticator loginMechanisms={['email']}>
       {({ signOut, user }) => (
         <ContainerStyle>
-          <Text fontSize="x-large">공지사항 및 사업보고</Text>
+          <Text fontSize="x-large">
+            {postType === 'NOTICE' ? '공지사항' : '연간사업보고'}
+          </Text>
+          <Button onClick={() => navigate('/login')}>
+            관리자 페이지 메인으로 돌아가기
+          </Button>
           <Tabs
             currentIndex={tabIndex}
             justifyContent="flex-start"
@@ -109,23 +121,14 @@ const PostCreate = () => {
             {/* post create */}
             <TabItem title="글쓰기">
               <PostsCreateForm
-                onChange={onPostChange}
+                // onChange={onPostChange}
                 onSubmit={onPostSubmit}
                 onSuccess={onPostSuccess}
-                clearOnSuccess={false}
+                clearOnSuccess={true}
               />
             </TabItem>
             {/* table */}
             <TabItem title="목록 보기">
-              <SelectField
-                label="공지사항 및 연간사업보고"
-                // descriptiveText="공지사항 및 연간사업보고"
-                onChange={onSelectChange}>
-                {/*<option value="all">모두</option>*/}
-                <option value="ALL">모두보기</option>
-                <option value="NOTICE">공지사항</option>
-                <option value="REPORT">사업보고</option>
-              </SelectField>
               <Table highlightOnHover variation="bordered" size="small">
                 <TableHead>
                   <TableRow>
@@ -141,9 +144,9 @@ const PostCreate = () => {
                         prev['createdAt'] > next['createdAt'] ? -1 : 1
                       )
                       .filter((item) => {
-                        return type === 'ALL'
-                          ? item['type']
-                          : type === item['type'];
+                        return item['type'] === postType;
+                        // ? item['type']
+                        // : type === item['type'];
                       })
                       .map((item, index) => {
                         // if (index + 1 > PAGINATION_LIMIT) return null;

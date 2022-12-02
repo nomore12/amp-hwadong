@@ -197,7 +197,7 @@ export default function PostsCreateForm(props) {
       ></TextField>
       <SelectField
         label="공지사항 / 연간사업보고"
-        placeholder="Please select an option"
+        placeholder="공지사항 / 연간사업보고는 자동으로 선택됩니다."
         isDisabled={false}
         value={type}
         onChange={(e) => {
@@ -247,14 +247,6 @@ export default function PostsCreateForm(props) {
           gap="15px"
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
-          <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
           <Button
             children="Submit"
             type="submit"
