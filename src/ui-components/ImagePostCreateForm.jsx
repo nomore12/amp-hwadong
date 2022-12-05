@@ -14,7 +14,6 @@ import {
   Flex,
   Grid,
   SelectField,
-  TextAreaField,
   TextField,
 } from "@aws-amplify/ui-react";
 import { DataStore } from "aws-amplify";
@@ -32,29 +31,27 @@ export default function ImagePostCreateForm(props) {
   } = props;
   const initialValues = {
     desc: undefined,
-    type: undefined,
-    images: undefined,
+    imgKey: undefined,
     createdAt: undefined,
+    type: undefined,
   };
   const [desc, setDesc] = React.useState(initialValues.desc);
-  const [type, setType] = React.useState(initialValues.type);
-  const [images, setImages] = React.useState(
-    initialValues.images ? JSON.stringify(initialValues.images) : undefined
-  );
+  const [imgKey, setImgKey] = React.useState(initialValues.imgKey);
   const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
+  const [type, setType] = React.useState(initialValues.type);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setDesc(initialValues.desc);
-    setType(initialValues.type);
-    setImages(initialValues.images);
+    setImgKey(initialValues.imgKey);
     setCreatedAt(initialValues.createdAt);
+    setType(initialValues.type);
     setErrors({});
   };
   const validations = {
     desc: [],
-    type: [],
-    images: [{ type: "JSON" }],
+    imgKey: [],
     createdAt: [],
+    type: [],
   };
   const runValidationTasks = async (fieldName, value) => {
     let validationResponse = validateField(value, validations[fieldName]);
@@ -75,9 +72,9 @@ export default function ImagePostCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           desc,
-          type,
-          images,
+          imgKey,
           createdAt,
+          type,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -127,9 +124,9 @@ export default function ImagePostCreateForm(props) {
           if (onChange) {
             const modelFields = {
               desc: value,
-              type,
-              images,
+              imgKey,
               createdAt,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.desc ?? value;
@@ -144,6 +141,59 @@ export default function ImagePostCreateForm(props) {
         hasError={errors.desc?.hasError}
         {...getOverrideProps(overrides, "desc")}
       ></TextField>
+      <TextField
+        label="Img key"
+        isRequired={false}
+        isReadOnly={false}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              desc,
+              imgKey: value,
+              createdAt,
+              type,
+            };
+            const result = onChange(modelFields);
+            value = result?.imgKey ?? value;
+          }
+          if (errors.imgKey?.hasError) {
+            runValidationTasks("imgKey", value);
+          }
+          setImgKey(value);
+        }}
+        onBlur={() => runValidationTasks("imgKey", imgKey)}
+        errorMessage={errors.imgKey?.errorMessage}
+        hasError={errors.imgKey?.hasError}
+        {...getOverrideProps(overrides, "imgKey")}
+      ></TextField>
+      <TextField
+        label="Created at"
+        isRequired={false}
+        isReadOnly={false}
+        type="date"
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              desc,
+              imgKey,
+              createdAt: value,
+              type,
+            };
+            const result = onChange(modelFields);
+            value = result?.createdAt ?? value;
+          }
+          if (errors.createdAt?.hasError) {
+            runValidationTasks("createdAt", value);
+          }
+          setCreatedAt(value);
+        }}
+        onBlur={() => runValidationTasks("createdAt", createdAt)}
+        errorMessage={errors.createdAt?.errorMessage}
+        hasError={errors.createdAt?.hasError}
+        {...getOverrideProps(overrides, "createdAt")}
+      ></TextField>
       <SelectField
         label="Type"
         placeholder="Please select an option"
@@ -154,9 +204,9 @@ export default function ImagePostCreateForm(props) {
           if (onChange) {
             const modelFields = {
               desc,
-              type: value,
-              images,
+              imgKey,
               createdAt,
+              type: value,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -182,59 +232,6 @@ export default function ImagePostCreateForm(props) {
           {...getOverrideProps(overrides, "typeoption1")}
         ></option>
       </SelectField>
-      <TextAreaField
-        label="Images"
-        isRequired={false}
-        isReadOnly={false}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              desc,
-              type,
-              images: value,
-              createdAt,
-            };
-            const result = onChange(modelFields);
-            value = result?.images ?? value;
-          }
-          if (errors.images?.hasError) {
-            runValidationTasks("images", value);
-          }
-          setImages(value);
-        }}
-        onBlur={() => runValidationTasks("images", images)}
-        errorMessage={errors.images?.errorMessage}
-        hasError={errors.images?.hasError}
-        {...getOverrideProps(overrides, "images")}
-      ></TextAreaField>
-      <TextField
-        label="Created at"
-        isRequired={false}
-        isReadOnly={false}
-        type="date"
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              desc,
-              type,
-              images,
-              createdAt: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.createdAt ?? value;
-          }
-          if (errors.createdAt?.hasError) {
-            runValidationTasks("createdAt", value);
-          }
-          setCreatedAt(value);
-        }}
-        onBlur={() => runValidationTasks("createdAt", createdAt)}
-        errorMessage={errors.createdAt?.errorMessage}
-        hasError={errors.createdAt?.hasError}
-        {...getOverrideProps(overrides, "createdAt")}
-      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

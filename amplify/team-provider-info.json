@@ -20,6 +20,9 @@
       },
       "storage": {
         "s3amphwadongstorage74a639ac": {}
+      },
+      "hosting": {
+        "S3AndCloudFront": {}
       }
     }
   }

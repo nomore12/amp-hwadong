@@ -17,19 +17,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "type": {
-                    "name": "type",
+                "imgKey": {
+                    "name": "imgKey",
                     "isArray": false,
-                    "type": {
-                        "enum": "ImagePostType"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "images": {
-                    "name": "images",
-                    "isArray": false,
-                    "type": "AWSJSON",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -37,6 +28,15 @@ export const schema = {
                     "name": "createdAt",
                     "isArray": false,
                     "type": "AWSDate",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "type": {
+                    "name": "type",
+                    "isArray": false,
+                    "type": {
+                        "enum": "ImagePostType"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -167,5 +167,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.2",
-    "version": "afc6e95b924d58751517b3d7a7d2bfe9"
+    "version": "361cb57a819cd233ba9bb8eca22a80ae"
 };

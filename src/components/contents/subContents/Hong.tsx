@@ -5,6 +5,8 @@ import useMouseEventHook from '../../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
 import { animateScroll } from 'react-scroll';
 import styled from 'styled-components';
+import hongUrl from 'src/components/assets/images/hong.png';
+import { isMobile } from 'react-device-detect';
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -52,6 +54,24 @@ const ContainerStyle = styled.div`
     width: 6rem;
     align-self: flex-end;
   }
+
+  .hong-img {
+    //position: absolute;
+    //bottom: 100px;
+    //right: 128px;
+    //width: calc(100vw - 300px);
+    //bottom: 200px;
+    //width: 100%;
+    display: none;
+
+    @media screen and (max-width: 1024px) {
+      display: flex;
+    }
+  }
+
+  .mobile-p {
+    text-align: start;
+  }
 `;
 
 const Hong = () => {
@@ -81,18 +101,36 @@ const Hong = () => {
   return (
     <ContainerStyle>
       <div className="onjium-desc">
-        <p>대한민국 건국과 산업 발전기에</p>
-        <p>
-          정부 · 기업 · 언론분야에서 활동하며 창조적인 삶을 실천하는데 온 힘을
-          쏟았던
-        </p>
-        <p>고(故) 유민 홍진기 전 중앙일보 회장의 유지를 기리기 위해 제정되어</p>
-        <p>과학기술, 사회, 문화예술의 세 분야에서</p>
-        <p>창의적인 업적을 이룩한 개인이나 단체를 대상으로</p>
-        <p>
-          각 분야를 대표하는 심사위원의 엄정한 심사를 거쳐 매년 수상자를
-          선정하고 있습니다.
-        </p>
+        {isMobile ? (
+          <>
+            <p className="mobile-p">
+              대한민국 건국과 산업 발전기에 정부 · 기업 · 언론분야에서 활동하며
+              창조적인 삶을 실천하는데 온 힘을 쏟았던 고(故) 유민 홍진기 전
+              중앙일보 회장의 유지를 기리기 위해 제정되어 과학기술, 사회,
+              문화예술의 세 분야에서창의적인 업적을 이룩한 개인이나 단체를
+              대상으로 각 분야를 대표하는 심사위원의 엄정한 심사를 거쳐 매년
+              수상자를 선정하고 있습니다.
+            </p>
+            <p></p>
+          </>
+        ) : (
+          <>
+            <p>대한민국 건국과 산업 발전기에</p>
+            <p>
+              정부 · 기업 · 언론분야에서 활동하며 창조적인 삶을 실천하는데 온
+              힘을 쏟았던
+            </p>
+            <p>
+              고(故) 유민 홍진기 전 중앙일보 회장의 유지를 기리기 위해 제정되어
+            </p>
+            <p>과학기술, 사회, 문화예술의 세 분야에서</p>
+            <p>창의적인 업적을 이룩한 개인이나 단체를 대상으로</p>
+            <p>
+              각 분야를 대표하는 심사위원의 엄정한 심사를 거쳐 매년 수상자를
+              선정하고 있습니다.
+            </p>
+          </>
+        )}
         <a
           className="hong-link"
           href="https://www.yumin.org/hongjingi_award.html"
@@ -107,6 +145,9 @@ const Hong = () => {
             LINK
           </div>
         </a>
+        <div className="hong-img">
+          <img src={hongUrl} />
+        </div>
       </div>
     </ContainerStyle>
   );

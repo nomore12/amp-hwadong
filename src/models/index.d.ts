@@ -21,9 +21,9 @@ type EagerImagePost = {
   };
   readonly id: string;
   readonly desc?: string | null;
-  readonly type?: ImagePostType | keyof typeof ImagePostType | null;
-  readonly images?: string | null;
+  readonly imgKey?: string | null;
   readonly createdAt?: string | null;
+  readonly type?: ImagePostType | keyof typeof ImagePostType | null;
   readonly updatedAt?: string | null;
 }
 
@@ -34,9 +34,9 @@ type LazyImagePost = {
   };
   readonly id: string;
   readonly desc?: string | null;
-  readonly type?: ImagePostType | keyof typeof ImagePostType | null;
-  readonly images?: string | null;
+  readonly imgKey?: string | null;
   readonly createdAt?: string | null;
+  readonly type?: ImagePostType | keyof typeof ImagePostType | null;
   readonly updatedAt?: string | null;
 }
 

@@ -15,6 +15,7 @@ const ContainerStyle = styled.div`
     font-size: 0.9rem;
     margin-top: 2rem;
     padding-bottom: 12px;
+    font-weight: 500;
 
     &:first-child {
       margin-top: 0;
@@ -47,7 +48,7 @@ const FoundationActivity = () => {
           );
           navigateToPage('/main/onjium');
         }}>
-        [전통문화연구소ㅣ 온지음]
+        전통문화연구소ㅣ 온지음
       </p>
       <p className="activity-item__desc">
         ‘과거와 현재가 온전히 만나 미래를 짓다’
@@ -69,7 +70,7 @@ const FoundationActivity = () => {
           );
           navigateToPage('/main/hong');
         }}>
-        [홍진기 창조인상]
+        홍진기 창조인상
       </p>
       <p className="activity-item__desc">
         ‘혁신적인 창조력의 가치를 믿고 지원하다’

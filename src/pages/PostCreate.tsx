@@ -19,7 +19,7 @@ import {
 import '@aws-amplify/ui-react/styles.css';
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutation from '../graphql/mutations';
-import { listPosts, listPosts as LISTPOSTS } from '../graphql/queries';
+import { listPosts } from '../graphql/queries';
 import PostsCreateForm, {
   PostsCreateFormInputValues,
   PostsCreateFormValidationValues,
@@ -38,13 +38,13 @@ const ContainerStyle = styled.div`
   padding: 2rem 4rem;
 `;
 
-const apiKey = 'da2-brh5jb5dw5biboz6hzj243f6du';
-const apiName = 'amphwadong-staging';
-const options = {
-  headers: {
-    Authorization: `bearer ${apiKey}`,
-  },
-};
+// const apiKey = 'da2-brh5jb5dw5biboz6hzj243f6du';
+// const apiName = 'amphwadong-staging';
+// const options = {
+//   headers: {
+//     Authorization: `bearer ${apiKey}`,
+//   },
+// };
 
 const PAGINATION_LIMIT = 10;
 

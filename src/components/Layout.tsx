@@ -41,6 +41,7 @@ import {
   subjectSlice,
 } from '../store/Slice';
 import notice from './content/Notice';
+import hongImg from 'src/components/assets/images/hong.png';
 
 // @ts-ignore
 const ContainerStyle = styled(motion.div)<{ color: string }>`
@@ -147,6 +148,21 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
 
     @media screen and (max-width: 1024px) {
       display: flex;
+    }
+  }
+
+  .sub-image {
+    position: fixed;
+    bottom: 4.8rem;
+    right: 5.8rem;
+    max-width: 768px;
+
+    @media screen and (max-width: 1230px) {
+      width: 530px;
+    }
+
+    @media screen and (max-width: 1024px) {
+      display: none;
     }
   }
 `;
@@ -332,6 +348,9 @@ const Layout = () => {
                 <PageContainer>
                   <Hong />
                 </PageContainer>
+                <div className="sub-image">
+                  <img src={hongImg} />
+                </div>
               </section>
             }
           />

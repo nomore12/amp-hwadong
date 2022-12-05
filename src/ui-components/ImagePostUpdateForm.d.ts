@@ -7,7 +7,7 @@
 import * as React from "react";
 import { ImagePost } from "../models";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { GridProps, SelectFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -15,23 +15,23 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type ImagePostUpdateFormInputValues = {
     desc?: string;
-    type?: string;
-    images?: string;
+    imgKey?: string;
     createdAt?: string;
+    type?: string;
 };
 export declare type ImagePostUpdateFormValidationValues = {
     desc?: ValidationFunction<string>;
-    type?: ValidationFunction<string>;
-    images?: ValidationFunction<string>;
+    imgKey?: ValidationFunction<string>;
     createdAt?: ValidationFunction<string>;
+    type?: ValidationFunction<string>;
 };
 export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ImagePostUpdateFormOverridesProps = {
     ImagePostUpdateFormGrid?: FormProps<GridProps>;
     desc?: FormProps<TextFieldProps>;
-    type?: FormProps<SelectFieldProps>;
-    images?: FormProps<TextAreaFieldProps>;
+    imgKey?: FormProps<TextFieldProps>;
     createdAt?: FormProps<TextFieldProps>;
+    type?: FormProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type ImagePostUpdateFormProps = React.PropsWithChildren<{
     overrides?: ImagePostUpdateFormOverridesProps | undefined | null;

@@ -4,7 +4,7 @@ import './index.css';
 import Cursor from 'src/components/Cursor';
 import MouseContextProvider from './components/context/MouseContext';
 import { animateScroll } from 'react-scroll';
-import { Amplify, API, graphqlOperation, Auth } from 'aws-amplify';
+import { Amplify, API, graphqlOperation, Auth, Storage } from 'aws-amplify';
 import config from './aws-exports';
 import { listPosts } from './graphql/queries';
 
