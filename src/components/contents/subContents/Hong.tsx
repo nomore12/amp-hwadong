@@ -62,7 +62,7 @@ const ContainerStyle = styled.div`
     //width: calc(100vw - 300px);
     //bottom: 200px;
     //width: 100%;
-    display: none;
+    //display: none;
 
     @media screen and (max-width: 1024px) {
       display: flex;

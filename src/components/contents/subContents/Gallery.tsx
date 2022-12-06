@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 // import { Carousel } from 'react-responsive-carousel';
 import { useAppDispatch, useAppSelector } from '../../../store/Hooks';
@@ -11,6 +11,11 @@ import arrow from 'src/static/images/logo.svg';
 import Carousel from 'nuka-carousel';
 import { ReactComponent as ArrowLeft } from 'src/static/images/arrow.svg';
 import { ReactComponent as ArrowRight } from 'src/static/images/arrowRight.svg';
+import useSubjectReplacer from '../../../hooks/SubjectReplacer';
+
+interface PropsType {
+  type: 'WCO' | 'ETC';
+}
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -49,22 +54,35 @@ const ContainerStyle = styled.div`
       //background: black;
     }
   }
+
   .carousel-desc {
     margin-top: 2rem;
     text-align: end;
   }
 
   .slider-control-bottomcenter {
-    position: absolute;
-    bottom: 50px;
+    //position: absolute;
+    //bottom: 50px;
 
     ul {
       gap: 1rem;
+
       li {
         button {
           fill: white !important;
         }
       }
+    }
+  }
+
+  .carousel-arrow-item {
+    width: 24px;
+    pointer-events: none;
+    margin: 0 0.5rem;
+    opacity: 0.7;
+
+    @media screen and (max-width: 720px) {
+      width: 16px;
     }
   }
 `;
@@ -84,50 +102,56 @@ const imgArr = [
   },
 ];
 
-const Gallery = () => {
+const Gallery = ({ type }: PropsType) => {
   const state = useAppSelector((state) => state.cursor);
   const dispatch = useAppDispatch();
   const [desc, setDesc] = useState(imgArr[0].desc);
   const scroll = Scroll;
+  const ref = useRef<HTMLDivElement | null>(null);
+  // useSubjectReplacer({
+  //   ref: ref,
+  //   subject: type === 'WCO' ? 'WCO' : '기타목적사업',
+  // });
 
   useEffect(() => {
     dispatch(changeCurr('archive'));
     dispatch(changeText('back'));
-    dispatch(changeSubject('갤러리'));
+    dispatch(changeSubject(type === 'WCO' ? 'WCO' : '기타목적사업'));
 
     return () => {
       dispatch(changeCurr('main'));
       dispatch(changeText(''));
-      dispatch(changeSubject('아카이브'));
+      dispatch(changeSubject('재단활동아카이브'));
     };
   }, []);
 
-  const onChange = (index: number, item: React.ReactNode) => {
+  const onChange = (index: number) => {
     setDesc(imgArr[index].desc);
   };
   return (
-    <ContainerStyle>
+    <ContainerStyle ref={ref}>
       <div className={`carousel-item`}>
         <Carousel
           autoplay
           autoplayInterval={5000}
           pauseOnHover
           wrapAround
-          cellSpacing={20}
+          afterSlide={onChange}
+          // cellSpacing={20}
           className={`carousel-item`}
           renderCenterLeftControls={({ previousDisabled, previousSlide }) => (
             <button
-              className="carousel-item"
+              className=" carousel-item"
               onClick={previousSlide}
               disabled={previousDisabled}>
               <ArrowLeft
-                className="carousel-item"
-                width="24px"
-                style={{
-                  marginLeft: '16px',
-                  pointerEvents: 'none',
-                  opacity: '0.7',
-                }}
+                className="carousel-item carousel-arrow-item"
+                // width="16px"
+                // style={{
+                //   marginLeft: '16px',
+                //   pointerEvents: 'none',
+                //   opacity: '0.7',
+                // }}
               />
             </button>
           )}
@@ -137,13 +161,12 @@ const Gallery = () => {
               onClick={nextSlide}
               disabled={nextDisabled}>
               <ArrowRight
-                className="carousel-item"
-                width="24px"
-                style={{
-                  marginRight: '16px',
-                  pointerEvents: 'none',
-                  opacity: '0.7',
-                }}
+                className="carousel-item carousel-arrow-item"
+                // style={{
+                //   marginRight: '16px',
+                //   pointerEvents: 'none',
+                //   opacity: '0.7',
+                // }}
               />
             </button>
           )}>
@@ -152,12 +175,12 @@ const Gallery = () => {
               return (
                 <div key={key} className={`carousel-item ${item.desc}`}>
                   <img src={item.img} className={`carousel-item`} />
-                  <p className={`carousel-item carousel-desc`}>{item.desc}</p>
+                  {/*<p className={`carousel-item carousel-desc`}>{item.desc}</p>*/}
                 </div>
               );
             })}
         </Carousel>
-        {/*<p>{desc}</p>*/}
+        <p style={{ marginTop: '2rem' }}>{desc}</p>
       </div>
     </ContainerStyle>
   );

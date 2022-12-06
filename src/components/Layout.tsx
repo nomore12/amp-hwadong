@@ -42,6 +42,7 @@ import {
 } from '../store/Slice';
 import notice from './content/Notice';
 import hongImg from 'src/components/assets/images/hong.png';
+import onjiumImg from 'src/components/assets/images/onjium.png';
 
 // @ts-ignore
 const ContainerStyle = styled(motion.div)<{ color: string }>`
@@ -155,7 +156,7 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
   .sub-image {
     position: fixed;
     bottom: 4.8rem;
-    right: 5.8rem;
+    right: 3.8rem;
     max-width: 768px;
 
     @media screen and (max-width: 1230px) {
@@ -166,6 +167,14 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
       display: none;
     }
   }
+
+  //.hong {
+  //  right: 7.4rem;
+  //}
+  //
+  //.onjium {
+  //  right: 7.4rem;
+  //}
 `;
 
 const Layout = () => {
@@ -323,11 +332,21 @@ const Layout = () => {
             }
           />
           <Route
-            path="/gallery"
+            path="/wco"
             element={
               <section>
                 <PageContainer>
-                  <Gallery />
+                  <Gallery type="WCO" />
+                </PageContainer>
+              </section>
+            }
+          />
+          <Route
+            path="/etc"
+            element={
+              <section>
+                <PageContainer>
+                  <Gallery type="ETC" />
                 </PageContainer>
               </section>
             }
@@ -339,6 +358,9 @@ const Layout = () => {
                 <PageContainer>
                   <Onjium />
                 </PageContainer>
+                {/*<div className="sub-image onjium">*/}
+                {/*  <img src={onjiumImg} />*/}
+                {/*</div>*/}
               </section>
             }
           />
@@ -349,9 +371,9 @@ const Layout = () => {
                 <PageContainer>
                   <Hong />
                 </PageContainer>
-                <div className="sub-image">
-                  <img src={hongImg} />
-                </div>
+                {/*<div className="sub-image hong">*/}
+                {/*  <img src={hongImg} />*/}
+                {/*</div>*/}
               </section>
             }
           />

@@ -57,7 +57,7 @@ const Archive = () => {
         onMouseMove={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseUp={() => {
-          memorizeScroll('/main/gallery');
+          memorizeScroll('/main/wco');
         }}>
         세계문화오픈 | WCO
       </p>
@@ -87,7 +87,7 @@ const Archive = () => {
         onMouseMove={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseUp={() => {
-          memorizeScroll('/main/gallery');
+          memorizeScroll('/main/etc');
         }}>
         기타 목적 사업
       </p>

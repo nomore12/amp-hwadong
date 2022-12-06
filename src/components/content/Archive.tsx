@@ -6,7 +6,7 @@ import useMouseEventHook from 'src/hooks/UseMouseEventHook';
 const Archive = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const { onMouseEnter, onMouseLeave, navigateToPage } = useMouseEventHook();
-  useSubjectReplacer({ ref: ref, subject: '아카이브' });
+  useSubjectReplacer({ ref: ref, subject: '재단활동아카이브' });
 
   return (
     <div ref={ref} className="w-720 h-128 flex flex-row justify-end mt-48 mb-8">
