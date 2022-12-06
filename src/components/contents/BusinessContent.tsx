@@ -14,6 +14,10 @@ const ContainerStyle = styled.div`
     align-items: flex-end;
     line-height: 1.6rem;
 
+    @media screen and (max-width: 720px) {
+      align-items: flex-start;
+    }
+
     .business-item__main {
       font-size: 0.9rem;
       color: rgba(39, 39, 42, 0.8);
@@ -28,6 +32,11 @@ const ContainerStyle = styled.div`
       color: rgba(39, 39, 42, 0.6);
       display: flex;
       flex-direction: column;
+
+      @media screen and (max-width: 720px) {
+        align-items: flex-start;
+        text-align: start;
+      }
     }
   }
 `;

@@ -14,6 +14,10 @@ const ContainerStyle = styled.div`
   align-items: flex-end;
   gap: 1rem;
 
+  @media screen and (max-width: 720px) {
+    //align-items: flex-start;
+  }
+
   .contact__inner {
     display: flex;
     flex-direction: column;
