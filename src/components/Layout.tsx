@@ -134,7 +134,8 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     @media screen and (max-width: 1024px) {
       padding: 0;
       display: flex;
-      justify-content: flex-end;
+      //justify-content: flex-end;
+      justify-content: flex-start;
       border-bottom: 1px solid rgba(39, 39, 42, 0.6);
       font-size: 1rem;
       letter-spacing: 0.5rem;

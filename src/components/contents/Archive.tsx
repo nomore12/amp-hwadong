@@ -10,6 +10,10 @@ const ContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
 
+  @media screen and (max-width: 720px) {
+    align-items: flex-start;
+  }
+
   .activity-item__subject {
     color: rgba(39, 39, 42, 0.8);
     font-size: 0.9rem;
