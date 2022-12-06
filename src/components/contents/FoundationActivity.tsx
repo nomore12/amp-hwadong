@@ -30,6 +30,10 @@ const ContainerStyle = styled.div`
     color: rgba(39, 39, 42, 0.6);
     font-size: 0.8rem;
     padding: 4px 0;
+
+    @media screen and (max-width: 720px) {
+      text-align: start;
+    }
   }
 `;
 

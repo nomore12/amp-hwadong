@@ -22,6 +22,7 @@ const ContainerStyle = styled.div`
       font-size: 0.9rem;
       color: rgba(39, 39, 42, 0.8);
       font-weight: 600;
+      text-align: start;
     }
 
     .business-item__sub {
@@ -90,7 +91,11 @@ const BusinessContent = () => {
           return (
             <div className="business-item" key={index}>
               <div className="business-item__main">{item.main}</div>
-              <div className="business-item__sub">{item.sub}</div>
+              {item.sub ? (
+                <div className="business-item__sub">{item.sub}</div>
+              ) : (
+                <div style={{ margin: '1rem 0' }}></div>
+              )}
             </div>
           );
         })}

@@ -33,10 +33,11 @@ const ContainerStyle = styled.div`
   .board-content-area {
     height: 100%;
     font-weight: 300;
-    padding-top: 1rem;
+    //padding-top: 1rem;
     text-align: start;
     font-size: 0.8rem;
     line-height: 1.6rem;
+    padding: 2rem 0 0 4.5rem;
   }
 
   & * {

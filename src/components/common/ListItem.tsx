@@ -43,7 +43,11 @@ const ContainerStyle = styled.li`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding: 0 1rem 0 4rem;
+      text-align: start;
+      width: 100%;
+      padding-left: 2rem;
+      //display: flex;
+      //justify-content: flex-start;
     }
 
     .list-item__created-at {
