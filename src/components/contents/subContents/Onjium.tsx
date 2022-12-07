@@ -62,6 +62,7 @@ const ContainerStyle = styled.div`
     //flex-wrap: wrap;
     //gap: 1rem;
     //display: none;
+    margin-top: 3rem;
 
     @media screen and (max-width: 1024px) {
       display: flex;

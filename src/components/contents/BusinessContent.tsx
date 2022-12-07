@@ -20,7 +20,7 @@ const ContainerStyle = styled.div`
 
     .business-item__main {
       font-size: 0.9rem;
-      color: rgba(39, 39, 42, 0.8);
+      color: rgba(39, 39, 42, 0.7);
       font-weight: 600;
       text-align: start;
     }

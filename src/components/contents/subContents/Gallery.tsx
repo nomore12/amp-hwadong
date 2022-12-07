@@ -11,7 +11,8 @@ import arrow from 'src/static/images/logo.svg';
 import Carousel from 'nuka-carousel';
 import { ReactComponent as ArrowLeft } from 'src/static/images/arrow.svg';
 import { ReactComponent as ArrowRight } from 'src/static/images/arrowRight.svg';
-import useSubjectReplacer from '../../../hooks/SubjectReplacer';
+import useSubjectReplacer from 'src/hooks/SubjectReplacer';
+import useMouseEventHook from 'src/hooks/UseMouseEventHook';
 
 interface PropsType {
   type: 'WCO' | 'ETC';
@@ -22,6 +23,17 @@ const ContainerStyle = styled.div`
   flex-direction: column;
   height: 780px;
   padding-top: 200px;
+
+  .gallery-subject {
+    display: none;
+
+    @media screen and (max-width: 720px) {
+      display: block;
+      margin-bottom: 1rem;
+      padding-left: 2px;
+      text-align: start;
+    }
+  }
 
   .gallery-carousel {
     width: 100%;
@@ -108,6 +120,7 @@ const Gallery = ({ type }: PropsType) => {
   const [desc, setDesc] = useState(imgArr[0].desc);
   const scroll = Scroll;
   const ref = useRef<HTMLDivElement | null>(null);
+  const { onMouseEnter, onMouseLeave, navigateToPage } = useMouseEventHook();
   // useSubjectReplacer({
   //   ref: ref,
   //   subject: type === 'WCO' ? 'WCO' : '기타목적사업',
@@ -130,6 +143,9 @@ const Gallery = ({ type }: PropsType) => {
   };
   return (
     <ContainerStyle ref={ref}>
+      <div className="gallery-subject">
+        {type === 'WCO' ? '세계문화오픈 | WCO' : '기타 목적 사업'}
+      </div>
       <div className={`carousel-item`}>
         <Carousel
           autoplay
@@ -143,7 +159,9 @@ const Gallery = ({ type }: PropsType) => {
             <button
               className=" carousel-item"
               onClick={previousSlide}
-              disabled={previousDisabled}>
+              disabled={previousDisabled}
+              onMouseEnter={(e) => onMouseEnter(e, ' ')}
+              onMouseLeave={(e) => onMouseLeave(e, 'back')}>
               <ArrowLeft
                 className="carousel-item carousel-arrow-item"
                 // width="16px"
@@ -159,7 +177,9 @@ const Gallery = ({ type }: PropsType) => {
             <button
               className="carousel-item"
               onClick={nextSlide}
-              disabled={nextDisabled}>
+              disabled={nextDisabled}
+              onMouseEnter={(e) => onMouseEnter(e, ' ')}
+              onMouseLeave={(e) => onMouseLeave(e, 'back')}>
               <ArrowRight
                 className="carousel-item carousel-arrow-item"
                 // style={{

@@ -63,7 +63,7 @@ const Overlay = () => {
       <Link smooth spy to="사업내용" offset={-250} onClick={onClick}>
         <h1>사업내용</h1>
       </Link>
-      <Link smooth spy to="위치 및 연락처" offset={-250} onClick={onClick}>
+      <Link smooth spy to="위치및연락처" offset={-250} onClick={onClick}>
         <h1>위치 및 연락처</h1>
       </Link>
       <Link smooth spy to="재단활동소개" offset={-250} onClick={onClick}>
