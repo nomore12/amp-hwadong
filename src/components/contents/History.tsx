@@ -36,7 +36,10 @@ const ContainerStyle = styled.div`
       width: 70%;
       word-break: keep-all;
       color: rgba(39, 39, 42, 0.8);
-      text-align: start;
+
+      @media screen and (max-width: 720px) {
+        text-align: start;
+      }
     }
   }
 `;
