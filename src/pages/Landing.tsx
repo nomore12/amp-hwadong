@@ -32,7 +32,7 @@ const Landing = () => {
   };
 
   useEffect(() => {
-    // if (localStorage.getItem('curr')) localStorage.removeItem('curr');
+    if (localStorage.getItem('curr')) localStorage.removeItem('curr');
   }, []);
 
   return (

@@ -69,6 +69,8 @@ const GalleryCreate = ({ type }: PropsType) => {
   const [createdAt, setCreatedAt] = useState('');
   const [desc, setDesc] = useState('');
   const [image, setImage] = useState<File>();
+  // const [urlList, setUrlList] = useState<string[]>([]);
+  const urlList: string[] = [];
 
   // https://stackoverflow.com/questions/73074928/aws-amplify-upload-files-best-practices
   const uploadImagePost = async (
@@ -116,6 +118,7 @@ const GalleryCreate = ({ type }: PropsType) => {
       query: listImagePosts,
       // variables: { type: type, limit: 15 },
     })) as any;
+    setList(data.listImagePosts.items);
 
     const imgList = data.listImagePosts.items.map(
       (item: ImagePostCreateFormInputValues, index: number) => {
@@ -124,12 +127,16 @@ const GalleryCreate = ({ type }: PropsType) => {
         //   console.log('img', index, res);
         //   imgUrl = res;
         // });
-        Storage.get(item.imgKey ? item.imgKey : '', {
+        const bb = Storage.get(item.imgKey ? item.imgKey : '', {
           level: 'public',
         }).then((res) => {
           console.log(item.imgKey, res);
+          urlList.push(res);
+          // const urlLists = [...urlList, res];
+          // setUrlList(urlLists);
           imgUrl = res;
         });
+        console.log(bb);
 
         return {
           desc: item.desc,
@@ -140,8 +147,9 @@ const GalleryCreate = ({ type }: PropsType) => {
       }
     );
 
-    console.log(imgList);
-    setList(imgList);
+    console.log('fetch');
+    // setTimeout(() => console.log('timeout'), 3000);
+    // setList(imgList);
   };
 
   const onChange = (
@@ -160,6 +168,20 @@ const GalleryCreate = ({ type }: PropsType) => {
 
   useEffect(() => {
     getList();
+    console.log('usf', urlList);
+
+    setTimeout(() => {
+      const alist = list.map((item, index) => {
+        return {
+          desc: item.desc,
+          createdAt: item.createdAt,
+          type: item.type,
+          imgKey: urlList[index],
+        };
+      });
+      console.log('timeout', alist, urlList);
+      setList(alist);
+    }, 5000);
   }, []);
 
   return (
