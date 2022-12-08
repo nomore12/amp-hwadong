@@ -71,6 +71,7 @@ const GalleryCreate = ({ type }: PropsType) => {
   const [image, setImage] = useState<File>();
   // const [urlList, setUrlList] = useState<string[]>([]);
   const urlList: string[] = [];
+  const [refresh, setRefresh] = useState(false);
 
   // https://stackoverflow.com/questions/73074928/aws-amplify-upload-files-best-practices
   const uploadImagePost = async (
@@ -84,14 +85,14 @@ const GalleryCreate = ({ type }: PropsType) => {
     });
 
     // const imgUrl = await Storage.get(key, { level: 'public' });
-
-    const url = await Storage.get(key, {
+    let url;
+    await Storage.get(key, {
       level: 'public',
-    });
+    }).then((res) => (url = res));
 
     const inputPost = {
       desc: inputDesc,
-      imgKey: filename,
+      imgKey: url,
       createdAt: inputCreatedAt,
       type: type,
     };
@@ -118,6 +119,7 @@ const GalleryCreate = ({ type }: PropsType) => {
       query: listImagePosts,
       // variables: { type: type, limit: 15 },
     })) as any;
+    console.log(data.listImagePosts.items);
     setList(data.listImagePosts.items);
 
     const imgList = data.listImagePosts.items.map(
@@ -130,8 +132,10 @@ const GalleryCreate = ({ type }: PropsType) => {
         const bb = Storage.get(item.imgKey ? item.imgKey : '', {
           level: 'public',
         }).then((res) => {
-          console.log(item.imgKey, res);
+          // console.log(item.imgKey, res);
+          console.log('url: ', res);
           urlList.push(res);
+          setRefresh(!refresh);
           // const urlLists = [...urlList, res];
           // setUrlList(urlLists);
           imgUrl = res;
@@ -167,22 +171,41 @@ const GalleryCreate = ({ type }: PropsType) => {
   };
 
   useEffect(() => {
-    getList();
-    console.log('usf', urlList);
+    (async function getLists() {
+      const { data } = (await API.graphql({ query: listImagePosts })) as any;
+      console.log(data);
+      setList(data.listImagePosts.items);
+    })();
+    // getList();
+    // console.log('usf', urlList);
+    //
+    // setTimeout(() => {
+    //   const alist = list.map((item, index) => {
+    //     return {
+    //       desc: item.desc,
+    //       createdAt: item.createdAt,
+    //       type: item.type,
+    //       imgKey: urlList[index],
+    //     };
+    //   });
+    //   console.log('timeout', list, urlList);
+    //   setList(alist);
+    // }, 5000);
+  }, []);
 
-    setTimeout(() => {
-      const alist = list.map((item, index) => {
+  useEffect(() => {
+    console.log(urlList.length, list.length);
+    if (urlList.length > 0) {
+      const result = list.map((item, index) => {
         return {
-          desc: item.desc,
-          createdAt: item.createdAt,
-          type: item.type,
+          ...item,
           imgKey: urlList[index],
         };
       });
-      console.log('timeout', alist, urlList);
-      setList(alist);
-    }, 5000);
-  }, []);
+      console.log('result', result, urlList);
+      setList(result);
+    }
+  }, [refresh]);
 
   return (
     <ContainerStyle>

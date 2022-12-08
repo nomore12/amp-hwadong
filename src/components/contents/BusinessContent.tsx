@@ -23,6 +23,7 @@ const ContainerStyle = styled.div`
       color: rgba(39, 39, 42, 0.7);
       font-weight: 600;
       text-align: start;
+      letter-spacing: -0.5px;
     }
 
     .business-item__sub {
