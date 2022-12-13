@@ -5,6 +5,7 @@ import { listImagePosts, listPosts } from '../graphql/queries';
 import { ImagePostCreateFormInputValues } from '../ui-components/ImagePostCreateForm';
 import styled from 'styled-components';
 import { Button } from '@aws-amplify/ui-react';
+import { useNavigate } from 'react-router-dom';
 
 interface PropsType {
   type: string;
@@ -66,7 +67,7 @@ const ContainerStyle = styled.div`
 `;
 
 const GalleryCreate = ({ type }: PropsType) => {
-  // const [list, setList] = useState<ImagePostCreateFormInputValues[]>([]);
+  const navigate = useNavigate();
   const [list, setList] = useState<{ url: string; key: string | undefined }[]>(
     []
   );
@@ -140,6 +141,9 @@ const GalleryCreate = ({ type }: PropsType) => {
 
   return (
     <ContainerStyle>
+      <Button onClick={() => navigate('/login')}>
+        관리자페이지 메인으로 돌아가기
+      </Button>
       <form style={{ padding: '40px' }}>
         <div>
           <input type="file" onChange={onFileChange} />

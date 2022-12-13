@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
-import PostsUpdateForm from '../ui-components/PostsUpdateForm';
+import PostsUpdateForm, {
+  PostsUpdateFormInputValues,
+} from '../ui-components/PostsUpdateForm';
 import { Text } from '@aws-amplify/ui-react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { API } from 'aws-amplify';
 import * as mutation from '../graphql/mutations';
 import { getPosts } from '../graphql/queries';
 
-// interface PropsType {
-//
-// };
+interface PropsType {
+  postType: string;
+}
 
 const PostUpdate = () => {
   const params = useParams();
+  const navigate = useNavigate();
 
   async function getPost() {
     const post = await API.graphql({
@@ -21,6 +24,16 @@ const PostUpdate = () => {
     const { data } = { ...post } as any;
   }
 
+  const onSubmit = (
+    fields: PostsUpdateFormInputValues
+  ): PostsUpdateFormInputValues => {
+    return fields;
+  };
+
+  const onSuccess = (fields: PostsUpdateFormInputValues) => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     getPost();
   }, []);
@@ -28,7 +41,11 @@ const PostUpdate = () => {
   return (
     <div>
       <Text>수정하기</Text>
-      <PostsUpdateForm id={params.id} />
+      <PostsUpdateForm
+        id={params.id}
+        onSubmit={onSubmit}
+        onSuccess={onSuccess}
+      />
     </div>
   );
 };

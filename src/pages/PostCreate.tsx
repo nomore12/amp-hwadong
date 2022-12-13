@@ -58,13 +58,8 @@ const PostCreate = ({ postType }: PropsType) => {
 
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
-    // const posts = await API.graphql(graphqlOperation(listPosts));
-    // const { data } = { ...posts } as any;
-    // setList(data.listPosts.items);
-
     const posts = await API.graphql({
       query: listPosts,
-      // variables: { type: type, limit: 15 },
     });
     const { data } = { ...posts } as any;
     setList(data.listPosts.items);
@@ -81,16 +76,27 @@ const PostCreate = ({ postType }: PropsType) => {
   };
 
   const onPostSuccess = (data: PostsCreateFormInputValues) => {
-    alert('작성이 완료되었습니다.');
+    // alert('작성이 완료되었습니다.');
+    // data && fetchPost();
+    setTimeout(() => window.location.reload(), 500);
     setTabIndex(1);
-    data && fetchPost();
   };
 
   const onPostSubmit = (data: PostsCreateFormInputValues) => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const date = today.getDate();
+    const awsDate = `${year}-${month >= 10 ? month : '0' + month}-${
+      date >= 10 ? date : '0' + date
+    }`;
+
     const result = {
       ...data,
       type: postType,
+      createdAt: awsDate,
     } as PostsCreateFormInputValues;
+
     return result;
   };
 
@@ -152,13 +158,16 @@ const PostCreate = ({ postType }: PropsType) => {
                         // if (index + 1 > PAGINATION_LIMIT) return null;
                         return (
                           <TableRow key={index}>
-                            <TableCell onClick={() => navigate(item['id'])}>
+                            <TableCell
+                              onClick={() => navigate(`/post/${item['id']}`)}>
                               {item['title']}
                             </TableCell>
-                            <TableCell onClick={() => navigate(item['id'])}>
+                            <TableCell
+                              onClick={() => navigate(`/post/${item['id']}`)}>
                               {item['type']}
                             </TableCell>
-                            <TableCell onClick={() => navigate(item['id'])}>
+                            <TableCell
+                              onClick={() => navigate(`/post/${item['id']}`)}>
                               {item['createdAt']}
                             </TableCell>
                           </TableRow>
