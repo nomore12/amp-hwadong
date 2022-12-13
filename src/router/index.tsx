@@ -29,9 +29,8 @@ const Router = () => {
           path="/post/report"
           element={<PostCreate postType="REPORT" />}></Route>
         <Route path="/post/:id" element={<PostUpdate />}></Route>
-        <Route path="/gallery" element={<GalleryCreate type="WCO" />}></Route>
-        <Route path="/gallery" element={<GalleryCreate type="ETC" />}></Route>
-        {/*<Route path="/main/:id" element={<Main />}></Route>*/}
+        <Route path="/wco" element={<GalleryCreate type="WCO" />}></Route>
+        <Route path="/etc" element={<GalleryCreate type="ETC" />}></Route>
       </Routes>
     </BrowserRouter>
   );

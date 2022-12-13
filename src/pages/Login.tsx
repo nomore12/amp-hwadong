@@ -58,8 +58,14 @@ const Login = () => {
           <Button
             variation="primary"
             size="large"
-            onClick={() => moveTo('gallery')}>
-            WCO / 기타목적사업 글쓰기
+            onClick={() => moveTo('wco')}>
+            WCO 글쓰기
+          </Button>
+          <Button
+            variation="primary"
+            size="large"
+            onClick={() => moveTo('etc')}>
+            기타목적사업 글쓰기
           </Button>
           <Button variation="primary" size="large" onClick={signOut}>
             Sign out
