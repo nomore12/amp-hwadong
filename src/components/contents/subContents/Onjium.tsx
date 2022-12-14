@@ -5,6 +5,10 @@ import useMouseEventHook from '../../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
 import { animateScroll } from 'react-scroll';
 import styled from 'styled-components';
+import imgLink1 from 'src/components/assets/images/onjium01.png';
+import imgLink2 from 'src/components/assets/images/onjium02.png';
+import imgLink3 from 'src/components/assets/images/onjium03.jpeg';
+import horizImage from 'src/components/assets/images/onjium.png';
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -49,6 +53,20 @@ const ContainerStyle = styled.div`
   .onjium-link {
     width: 6rem;
     align-self: flex-end;
+  }
+
+  .onjium-img-container {
+    //padding: 1rem 0;
+    //display: flex;
+    //justify-content: flex-end;
+    //flex-wrap: wrap;
+    //gap: 1rem;
+    //display: none;
+    margin-top: 3rem;
+
+    @media screen and (max-width: 1024px) {
+      display: flex;
+    }
   }
 `;
 
@@ -130,6 +148,9 @@ const OnJium = () => {
             한옥과 관련된 기획 연구 등
           </p>
         </div>
+      </div>
+      <div className="onjium-img-container">
+        <img src={horizImage} />
       </div>
     </ContainerStyle>
   );

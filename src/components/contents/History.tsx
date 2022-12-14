@@ -31,10 +31,15 @@ const ContainerStyle = styled.div`
     .history-item__year {
       color: rgba(39, 39, 42, 0.8);
     }
+
     .history-item__desc {
-      width: 60%;
+      width: 70%;
       word-break: keep-all;
       color: rgba(39, 39, 42, 0.8);
+
+      @media screen and (max-width: 720px) {
+        text-align: start;
+      }
     }
   }
 `;

@@ -2,29 +2,29 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreatePostsInput = {
+export type CreateImagePostInput = {
   id?: string | null,
-  title?: string | null,
   desc?: string | null,
+  imgKey?: string | null,
   createdAt?: string | null,
-  type?: Type | null,
+  type?: ImagePostType | null,
   _version?: number | null,
 };
 
-export enum Type {
-  NOTICE = "NOTICE",
-  REPORT = "REPORT",
+export enum ImagePostType {
+  WCO = "WCO",
+  ETC = "ETC",
 }
 
 
-export type ModelPostsConditionInput = {
-  title?: ModelStringInput | null,
+export type ModelImagePostConditionInput = {
   desc?: ModelStringInput | null,
+  imgKey?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
-  type?: ModelTypeInput | null,
-  and?: Array< ModelPostsConditionInput | null > | null,
-  or?: Array< ModelPostsConditionInput | null > | null,
-  not?: ModelPostsConditionInput | null,
+  type?: ModelImagePostTypeInput | null,
+  and?: Array< ModelImagePostConditionInput | null > | null,
+  or?: Array< ModelImagePostConditionInput | null > | null,
+  not?: ModelImagePostConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -67,6 +67,63 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelImagePostTypeInput = {
+  eq?: ImagePostType | null,
+  ne?: ImagePostType | null,
+};
+
+export type ImagePost = {
+  __typename: "ImagePost",
+  id: string,
+  desc?: string | null,
+  imgKey?: string | null,
+  createdAt?: string | null,
+  type?: ImagePostType | null,
+  updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+};
+
+export type UpdateImagePostInput = {
+  id: string,
+  desc?: string | null,
+  imgKey?: string | null,
+  createdAt?: string | null,
+  type?: ImagePostType | null,
+  _version?: number | null,
+};
+
+export type DeleteImagePostInput = {
+  id: string,
+  _version?: number | null,
+};
+
+export type CreatePostsInput = {
+  id?: string | null,
+  title?: string | null,
+  desc?: string | null,
+  createdAt?: string | null,
+  type?: Type | null,
+  _version?: number | null,
+};
+
+export enum Type {
+  NOTICE = "NOTICE",
+  REPORT = "REPORT",
+}
+
+
+export type ModelPostsConditionInput = {
+  title?: ModelStringInput | null,
+  desc?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  type?: ModelTypeInput | null,
+  and?: Array< ModelPostsConditionInput | null > | null,
+  or?: Array< ModelPostsConditionInput | null > | null,
+  not?: ModelPostsConditionInput | null,
+};
+
 export type ModelTypeInput = {
   eq?: Type | null,
   ne?: Type | null,
@@ -99,15 +156,15 @@ export type DeletePostsInput = {
   _version?: number | null,
 };
 
-export type ModelPostsFilterInput = {
+export type ModelImagePostFilterInput = {
   id?: ModelIDInput | null,
-  title?: ModelStringInput | null,
   desc?: ModelStringInput | null,
+  imgKey?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
-  type?: ModelTypeInput | null,
-  and?: Array< ModelPostsFilterInput | null > | null,
-  or?: Array< ModelPostsFilterInput | null > | null,
-  not?: ModelPostsFilterInput | null,
+  type?: ModelImagePostTypeInput | null,
+  and?: Array< ModelImagePostFilterInput | null > | null,
+  or?: Array< ModelImagePostFilterInput | null > | null,
+  not?: ModelImagePostFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -126,6 +183,24 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
+export type ModelImagePostConnection = {
+  __typename: "ModelImagePostConnection",
+  items:  Array<ImagePost | null >,
+  nextToken?: string | null,
+  startedAt?: number | null,
+};
+
+export type ModelPostsFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  desc?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  type?: ModelTypeInput | null,
+  and?: Array< ModelPostsFilterInput | null > | null,
+  or?: Array< ModelPostsFilterInput | null > | null,
+  not?: ModelPostsFilterInput | null,
+};
+
 export type ModelPostsConnection = {
   __typename: "ModelPostsConnection",
   items:  Array<Posts | null >,
@@ -133,14 +208,14 @@ export type ModelPostsConnection = {
   startedAt?: number | null,
 };
 
-export type ModelSubscriptionPostsFilterInput = {
+export type ModelSubscriptionImagePostFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  title?: ModelSubscriptionStringInput | null,
   desc?: ModelSubscriptionStringInput | null,
+  imgKey?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   type?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPostsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPostsFilterInput | null > | null,
+  and?: Array< ModelSubscriptionImagePostFilterInput | null > | null,
+  or?: Array< ModelSubscriptionImagePostFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -171,6 +246,76 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionPostsFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  desc?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionPostsFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPostsFilterInput | null > | null,
+};
+
+export type CreateImagePostMutationVariables = {
+  input: CreateImagePostInput,
+  condition?: ModelImagePostConditionInput | null,
+};
+
+export type CreateImagePostMutation = {
+  createImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type UpdateImagePostMutationVariables = {
+  input: UpdateImagePostInput,
+  condition?: ModelImagePostConditionInput | null,
+};
+
+export type UpdateImagePostMutation = {
+  updateImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type DeleteImagePostMutationVariables = {
+  input: DeleteImagePostInput,
+  condition?: ModelImagePostConditionInput | null,
+};
+
+export type DeleteImagePostMutation = {
+  deleteImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
 };
 
 export type CreatePostsMutationVariables = {
@@ -230,6 +375,78 @@ export type DeletePostsMutation = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+  } | null,
+};
+
+export type GetImagePostQueryVariables = {
+  id: string,
+};
+
+export type GetImagePostQuery = {
+  getImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListImagePostsQueryVariables = {
+  filter?: ModelImagePostFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListImagePostsQuery = {
+  listImagePosts?:  {
+    __typename: "ModelImagePostConnection",
+    items:  Array< {
+      __typename: "ImagePost",
+      id: string,
+      desc?: string | null,
+      imgKey?: string | null,
+      createdAt?: string | null,
+      type?: ImagePostType | null,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncImagePostsQueryVariables = {
+  filter?: ModelImagePostFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncImagePostsQuery = {
+  syncImagePosts?:  {
+    __typename: "ModelImagePostConnection",
+    items:  Array< {
+      __typename: "ImagePost",
+      id: string,
+      desc?: string | null,
+      imgKey?: string | null,
+      createdAt?: string | null,
+      type?: ImagePostType | null,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -302,6 +519,63 @@ export type SyncPostsQuery = {
     } | null >,
     nextToken?: string | null,
     startedAt?: number | null,
+  } | null,
+};
+
+export type OnCreateImagePostSubscriptionVariables = {
+  filter?: ModelSubscriptionImagePostFilterInput | null,
+};
+
+export type OnCreateImagePostSubscription = {
+  onCreateImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnUpdateImagePostSubscriptionVariables = {
+  filter?: ModelSubscriptionImagePostFilterInput | null,
+};
+
+export type OnUpdateImagePostSubscription = {
+  onUpdateImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnDeleteImagePostSubscriptionVariables = {
+  filter?: ModelSubscriptionImagePostFilterInput | null,
+};
+
+export type OnDeleteImagePostSubscription = {
+  onDeleteImagePost?:  {
+    __typename: "ImagePost",
+    id: string,
+    desc?: string | null,
+    imgKey?: string | null,
+    createdAt?: string | null,
+    type?: ImagePostType | null,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
   } | null,
 };
 

@@ -34,12 +34,14 @@ const MobileFooter = () => {
     <ContainerStyle>
       <div>
         <p>이용약관 | 개인정보취급방침</p>
-        <p>대표 | 홍 석 현</p>
+        <p style={{ padding: '4px 0 6px 0' }}>대표 | 홍 석 현</p>
         <p>사업자등록번호 | 104 - 82 - 10204</p>
         <p>대표번호 | 02 - 751 - 9898</p>
         <p>이메일 | hwadongcf@naver.com</p>
         <p>주소 | 서울특별시 중구 서소문로 100</p>
-        <p>COPYRIGHT (C) 2022 KSA ALL RIGHTS RESERVED.</p>
+        <p style={{ padding: '4px 0' }}>
+          COPYRIGHT (C) 2022 KSA ALL RIGHTS RESERVED.
+        </p>
       </div>
       <div className="logos">
         <div className="mobile-footer-logo">

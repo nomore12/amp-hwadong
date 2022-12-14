@@ -20,7 +20,6 @@ const useMouseEventHook = () => {
     e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLSpanElement>,
     text?: string
   ) => {
-    console.log(state);
     text ? dispatch(changeCurr(text)) : dispatch(changeCurr('main'));
     text ? dispatch(changeText(text)) : dispatch(changeText(''));
   };

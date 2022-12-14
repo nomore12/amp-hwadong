@@ -31,6 +31,10 @@ const Landing = () => {
     setOpacity(0);
   };
 
+  useEffect(() => {
+    if (localStorage.getItem('curr')) localStorage.removeItem('curr');
+  }, []);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <ContainerStyle>

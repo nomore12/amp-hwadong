@@ -10,11 +10,16 @@ const ContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
 
+  @media screen and (max-width: 720px) {
+    align-items: flex-start;
+  }
+
   .activity-item__subject {
     color: rgba(39, 39, 42, 0.8);
     font-size: 0.9rem;
     margin-top: 2rem;
     padding-bottom: 12px;
+    font-weight: 500;
 
     &:first-child {
       margin-top: 0;
@@ -25,6 +30,10 @@ const ContainerStyle = styled.div`
     color: rgba(39, 39, 42, 0.6);
     font-size: 0.8rem;
     padding: 4px 0;
+
+    @media screen and (max-width: 720px) {
+      text-align: start;
+    }
   }
 `;
 
@@ -47,7 +56,7 @@ const FoundationActivity = () => {
           );
           navigateToPage('/main/onjium');
         }}>
-        [전통문화연구소ㅣ 온지음]
+        전통문화연구소ㅣ 온지음
       </p>
       <p className="activity-item__desc">
         ‘과거와 현재가 온전히 만나 미래를 짓다’
@@ -69,7 +78,7 @@ const FoundationActivity = () => {
           );
           navigateToPage('/main/hong');
         }}>
-        [홍진기 창조인상]
+        홍진기 창조인상
       </p>
       <p className="activity-item__desc">
         ‘혁신적인 창조력의 가치를 믿고 지원하다’

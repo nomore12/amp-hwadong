@@ -10,6 +10,10 @@ const ContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
 
+  @media screen and (max-width: 720px) {
+    align-items: flex-start;
+  }
+
   .activity-item__subject {
     color: rgba(39, 39, 42, 0.8);
     font-size: 0.9rem;
@@ -25,6 +29,10 @@ const ContainerStyle = styled.div`
     color: rgba(39, 39, 42, 0.6);
     font-size: 0.8rem;
     padding: 4px 0;
+
+    @media screen and (max-width: 720px) {
+      text-align: start;
+    }
   }
 
   .mobile-subject {
@@ -53,7 +61,7 @@ const Archive = () => {
         onMouseMove={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseUp={() => {
-          memorizeScroll('/main/gallery');
+          memorizeScroll('/main/wco');
         }}>
         세계문화오픈 | WCO
       </p>
@@ -83,7 +91,7 @@ const Archive = () => {
         onMouseMove={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseUp={() => {
-          memorizeScroll('/main/gallery');
+          memorizeScroll('/main/etc');
         }}>
         기타 목적 사업
       </p>

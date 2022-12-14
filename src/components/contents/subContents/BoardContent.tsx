@@ -6,6 +6,8 @@ import { animateScroll } from 'react-scroll';
 import { useAppDispatch } from '../../../store/Hooks';
 import useMouseEventHook from '../../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as queries from 'src/graphql/queries';
 
 interface PropsType {
   id?: number;
@@ -14,6 +16,7 @@ interface PropsType {
   content?: string;
   imgUrl: string;
   type: string;
+  uuid: string;
 }
 
 const ContainerStyle = styled.div`
@@ -30,8 +33,11 @@ const ContainerStyle = styled.div`
   .board-content-area {
     height: 100%;
     font-weight: 300;
-    padding-top: 1rem;
+    //padding-top: 1rem;
     text-align: start;
+    font-size: 0.8rem;
+    line-height: 1.6rem;
+    padding: 2rem 0 0 4.5rem;
   }
 
   & * {
@@ -45,6 +51,8 @@ const BoardContent = () => {
   const { onMouseEnter, onMouseLeave, navigateToPage } = useMouseEventHook();
   const location = useLocation();
   const [type, setType] = useState('');
+  const [contentData, setContentData] = useState<any>();
+  const [loading, setLoading] = useState(true);
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -56,7 +64,20 @@ const BoardContent = () => {
     );
   };
 
+  const fetchPost = async () => {
+    const post = await API.graphql({
+      query: queries.getPosts,
+      variables: { id: param.id },
+    });
+    const { data } = { ...post } as any;
+    setContentData(data.getPosts);
+    setLoading(false);
+  };
+
   useEffect(() => {
+    animateScroll.scrollToTop();
+    fetchPost();
+
     dispatch(changeCurr('archive'));
     dispatch(changeText('back'));
     dispatch(
@@ -77,20 +98,24 @@ const BoardContent = () => {
       );
       window.removeEventListener('focus', eventListener);
     };
-  }, []);
-
-  useEffect(() => {
-    animateScroll.scrollToTop();
-  }, []);
+  }, [loading]);
 
   return (
     <ContainerStyle>
-      <ListItem
-        index={1}
-        subject={'홈페이지 오픈 준비중입니다.'}
-        createdAt={'2022-11-13'}
-      />
-      <p className="board-content-area">{'홈페이지 오픈 준비중입니다.'}</p>
+      {loading ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          <ListItem
+            index={1}
+            subject={contentData.title}
+            createdAt={contentData.createdAt}
+            type={contentData.type}
+            uuid={contentData.id}
+          />
+          <p className="board-content-area">{contentData.desc}</p>
+        </>
+      )}
     </ContainerStyle>
   );
 };

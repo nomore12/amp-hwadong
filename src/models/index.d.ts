@@ -2,12 +2,49 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
+export enum ImagePostType {
+  WCO = "WCO",
+  ETC = "ETC"
+}
+
 export enum Type {
   NOTICE = "NOTICE",
   REPORT = "REPORT"
 }
 
 
+
+type EagerImagePost = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<ImagePost, 'id'>;
+    readOnlyFields: 'updatedAt';
+  };
+  readonly id: string;
+  readonly desc?: string | null;
+  readonly imgKey?: string | null;
+  readonly createdAt?: string | null;
+  readonly type?: ImagePostType | keyof typeof ImagePostType | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyImagePost = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<ImagePost, 'id'>;
+    readOnlyFields: 'updatedAt';
+  };
+  readonly id: string;
+  readonly desc?: string | null;
+  readonly imgKey?: string | null;
+  readonly createdAt?: string | null;
+  readonly type?: ImagePostType | keyof typeof ImagePostType | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type ImagePost = LazyLoading extends LazyLoadingDisabled ? EagerImagePost : LazyImagePost
+
+export declare const ImagePost: (new (init: ModelInit<ImagePost>) => ImagePost) & {
+  copyOf(source: ImagePost, mutator: (draft: MutableModel<ImagePost>) => MutableModel<ImagePost> | void): ImagePost;
+}
 
 type EagerPosts = {
   readonly [__modelMeta__]: {

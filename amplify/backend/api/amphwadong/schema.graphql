@@ -1,3 +1,16 @@
+enum ImagePostType {
+  WCO
+  ETC
+}
+
+type ImagePost @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  desc: String
+  imgKey: String
+  createdAt: AWSDate
+  type: ImagePostType
+}
+
 enum Type {
   NOTICE
   REPORT

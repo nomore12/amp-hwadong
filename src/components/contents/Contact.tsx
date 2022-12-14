@@ -14,6 +14,10 @@ const ContainerStyle = styled.div`
   align-items: flex-end;
   gap: 1rem;
 
+  @media screen and (max-width: 720px) {
+    //align-items: flex-start;
+  }
+
   .contact__inner {
     display: flex;
     flex-direction: column;
@@ -25,6 +29,10 @@ const ContainerStyle = styled.div`
 
     .contact__inner--thin {
       font-weight: 400;
+    }
+
+    .contact__inner--item {
+      font-size: 0.8rem;
     }
   }
 `;
@@ -41,10 +49,12 @@ const Contact = () => {
       <Instagram width="28px" height="28px" />
       <div className="contact__inner">
         <a className="contact__inner--content" href="tel:02-751-9894">
-          <span className="contact__inner--thin">tel | </span>02. 751. 9898
+          <span className="contact__inner--thin">tel | </span>
+          <span className="contact__inner--item">02. 751. 9898</span>
         </a>
         <p className="contact__inner--content">
-          <span className="contact__inner--thin">fax | </span>02. 751. 9894
+          <span className="contact__inner--thin">fax | </span>
+          <span className="contact__inner--item">02. 751. 9894</span>
         </p>
         <a
           href="mailto:nightwing@naver.com"
@@ -57,7 +67,7 @@ const Contact = () => {
             onMouseLeave={function (e) {
               onMouseLeave(e);
             }}>
-            hwadongcf@naver.com
+            <span className="contact__inner--item">hwadongcf@naver.com</span>
           </span>
         </a>
       </div>

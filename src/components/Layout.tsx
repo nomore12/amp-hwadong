@@ -8,7 +8,7 @@ import {
   useLocation,
   useParams,
 } from 'react-router-dom';
-import { useAppSelector } from 'src/store/Hooks';
+import { useAppDispatch, useAppSelector } from 'src/store/Hooks';
 import { motion } from 'framer-motion';
 import { isMobile } from 'react-device-detect';
 import MobileNavigation from './MobileNavigation';
@@ -31,6 +31,18 @@ import Hong from './contents/subContents/Hong';
 import BoardContent from 'src/components/contents/subContents/BoardContent';
 import { animateScroll } from 'react-scroll';
 import Overlay from './Overlay';
+import useFetchPost from '../hooks/FetchPost';
+import {
+  postSlice,
+  setCurrNoticeIndex,
+  setCurrReportIndex,
+  setNotices,
+  setReports,
+  subjectSlice,
+} from '../store/Slice';
+import notice from './content/Notice';
+import hongImg from 'src/components/assets/images/hong.png';
+import onjiumImg from 'src/components/assets/images/onjium.png';
 
 // @ts-ignore
 const ContainerStyle = styled(motion.div)<{ color: string }>`
@@ -64,7 +76,7 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     left: 0;
     display: none;
     width: 100%;
-    padding: 1rem 0 0 1rem;
+    padding: 1rem 1rem 1.5rem 1rem;
     background-color: ${(props) => (props.color ? props.color : '#fff')};
     transition: background-color 1000ms linear;
 
@@ -93,6 +105,7 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     width: 100%;
     //border: 1px solid black;
     position: relative;
+    pointer-events: none;
 
     @media screen and (max-width: 1230px) {
       display: none;
@@ -123,7 +136,8 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     @media screen and (max-width: 1024px) {
       padding: 0;
       display: flex;
-      justify-content: flex-end;
+      //justify-content: flex-end;
+      justify-content: flex-start;
       border-bottom: 1px solid rgba(39, 39, 42, 0.6);
       font-size: 1rem;
       letter-spacing: 0.5rem;
@@ -138,10 +152,34 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
       display: flex;
     }
   }
+
+  .sub-image {
+    position: fixed;
+    bottom: 4.8rem;
+    right: 3.8rem;
+    max-width: 768px;
+
+    @media screen and (max-width: 1230px) {
+      width: 530px;
+    }
+
+    @media screen and (max-width: 1024px) {
+      display: none;
+    }
+  }
+
+  //.hong {
+  //  right: 7.4rem;
+  //}
+  //
+  //.onjium {
+  //  right: 7.4rem;
+  //}
 `;
 
 const Layout = () => {
   const subject = useAppSelector((state) => state.subject);
+  const dispatch = useAppDispatch();
   const cursor = useAppSelector((state) => state.cursor);
   const overlay = useAppSelector((state) => state.overlay.enabled);
   const navigate = useNavigate();
@@ -150,6 +188,9 @@ const Layout = () => {
   const location = useLocation();
   const params = useParams();
   const [innderWidth, setinnerWidth] = useState(0);
+  const postList = useFetchPost();
+  const noticeList = postList.filter((item: any) => item['type'] === 'NOTICE');
+  const reportList = postList.filter((item: any) => item['type'] === 'REPORT');
 
   const backToMainPage = (e: React.MouseEvent<HTMLDivElement>) => {
     if (cursor.curr === 'main' || isMobile) return;
@@ -177,7 +218,6 @@ const Layout = () => {
     if (pos) {
       animateScroll.scrollTo(Number(pos), { duration: 0 });
     }
-    console.log(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -212,8 +252,11 @@ const Layout = () => {
   }, [window.innerWidth]);
 
   useEffect(() => {
-    console.log(params);
-  }, []);
+    dispatch(setNotices(noticeList));
+    dispatch(setReports(reportList));
+    dispatch(setCurrNoticeIndex(1));
+    dispatch(setCurrReportIndex(1));
+  }, [postList]);
 
   return (
     <ContainerStyle
@@ -225,9 +268,15 @@ const Layout = () => {
       {overlay && <Overlay />}
       <Navigation />
       <div className="web-logo">
-        <img src={logo} alt="logo" width="232px" />
+        <button
+          className="home-button"
+          onClick={() => {
+            navigate('/');
+          }}>
+          <img src={logo} alt="logo" width="232px" />
+        </button>
       </div>
-      <div className="mobile-logo" onClick={() => navigate('/main')}>
+      <div className="mobile-logo" onClick={() => navigate('/')}>
         <img src={logo} alt="logo" width="128px" />
       </div>
       <MobileNavigation />
@@ -270,24 +319,34 @@ const Layout = () => {
                 <p className="mobile-subject">공지사항</p>
                 <section id="공지사항">
                   <ContentContainer>
-                    {<Board boardType="공지사항" lists={listDummy} />}
+                    {<Board boardType="공지사항" lists={noticeList} />}
                   </ContentContainer>
                 </section>
                 <p className="mobile-subject">연간 사업보고</p>
                 <section id="연간사업보고">
                   <ContentContainer>
-                    {<Board boardType="연간사업보고" lists={listDummy} />}
+                    {<Board boardType="연간사업보고" lists={reportList} />}
                   </ContentContainer>
                 </section>
               </div>
             }
           />
           <Route
-            path="/gallery"
+            path="/wco"
             element={
               <section>
                 <PageContainer>
-                  <Gallery />
+                  <Gallery type="WCO" />
+                </PageContainer>
+              </section>
+            }
+          />
+          <Route
+            path="/etc"
+            element={
+              <section>
+                <PageContainer>
+                  <Gallery type="ETC" />
                 </PageContainer>
               </section>
             }
@@ -299,6 +358,9 @@ const Layout = () => {
                 <PageContainer>
                   <Onjium />
                 </PageContainer>
+                {/*<div className="sub-image onjium">*/}
+                {/*  <img src={onjiumImg} />*/}
+                {/*</div>*/}
               </section>
             }
           />
@@ -309,6 +371,9 @@ const Layout = () => {
                 <PageContainer>
                   <Hong />
                 </PageContainer>
+                {/*<div className="sub-image hong">*/}
+                {/*  <img src={hongImg} />*/}
+                {/*</div>*/}
               </section>
             }
           />
