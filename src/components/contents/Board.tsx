@@ -29,6 +29,20 @@ interface List {
   uuid: string;
 }
 
+const PaginationStyle = styled(Pagination)`
+  //.amplify-pagination__item-button :first-child {
+  //  display: none;
+  //}
+
+  .amplify-flex li:first-child {
+    display: none;
+  }
+
+  .amplify-flex li:last-child {
+    display: none;
+  }
+`;
+
 const ContainerStyle = styled.ul`
   width: 100%;
   display: flex;
@@ -45,6 +59,7 @@ const Board = ({ boardType, lists }: PropsType) => {
   const postInfo = useAppSelector((state) => state.posts);
   const dispatch = useAppDispatch();
   const [currPage, setCurrPage] = useState(1);
+
   // const [currList, setCurrList] = useState<any[]>();
   // const [loading, setLoading] = useState(true);
 
@@ -74,6 +89,10 @@ const Board = ({ boardType, lists }: PropsType) => {
     );
   };
 
+  // useEffect(() => {
+  //   console.log('');
+  // }, [currPage]);
+
   return (
     <div
       style={{
@@ -97,10 +116,20 @@ const Board = ({ boardType, lists }: PropsType) => {
             );
           })}
       </ContainerStyle>
-      <Pagination
+      <PaginationStyle
         onChange={onPaginationChange}
         currentPage={currPage}
         siblingCount={3}
+        onPrevious={() => setCurrPage(1)}
+        onNext={() =>
+          setCurrPage(
+            Math.ceil(
+              boardType === '공지사항'
+                ? postInfo.notices.length / 10
+                : postInfo.reports.length / 10
+            )
+          )
+        }
         totalPages={Math.ceil(
           boardType === '공지사항'
             ? postInfo.notices.length / 10
