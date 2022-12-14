@@ -38,6 +38,7 @@ const ContainerStyle = styled.div`
     font-size: 0.8rem;
     line-height: 1.6rem;
     padding: 2rem 0 0 4.5rem;
+    white-space: pre-wrap;
   }
 
   & * {
