@@ -105,6 +105,23 @@ const ContainerStyle = styled.div`
       width: 16px;
     }
   }
+
+  //img {
+  //  width: 100%;
+  //  align-self: center;
+  //}
+
+  .slide-visible {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      align-self: center;
+      width: 100%;
+    }
+  }
 `;
 
 const imgArr = [
@@ -156,7 +173,7 @@ const Gallery = ({ type }: PropsType) => {
     });
     console.log('results', results);
     const keys: { url: string; key: string | undefined }[] = [];
-    for (const file of results) {
+    for await (const file of results) {
       const url = await Storage.get(file.key ? file.key : '');
       const key = file.key;
       keys.push({ url: url, key: key });
@@ -167,6 +184,8 @@ const Gallery = ({ type }: PropsType) => {
 
   useEffect(() => {
     getList();
+    const timer = setTimeout(() => setLoading(!loading), 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -182,7 +201,7 @@ const Gallery = ({ type }: PropsType) => {
           pauseOnHover
           wrapAround
           afterSlide={onChange}
-          adaptiveHeight
+          cellAlign="center"
           renderCenterLeftControls={({ previousDisabled, previousSlide }) => (
             <button
               className=" carousel-item"
@@ -214,6 +233,7 @@ const Gallery = ({ type }: PropsType) => {
               );
             })}
         </Carousel>
+
         {/*{list && loading && (*/}
         <p style={{ marginTop: '2rem' }}>{desc.substring(4, desc.length)}</p>
         {/*)}*/}
