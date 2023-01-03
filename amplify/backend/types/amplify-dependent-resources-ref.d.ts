@@ -17,12 +17,6 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientID": "string"
         }
     },
-    "storage": {
-        "s3amphwadongstorage74a639ac": {
-            "BucketName": "string",
-            "Region": "string"
-        }
-    },
     "hosting": {
         "S3AndCloudFront": {
             "Region": "string",
@@ -33,6 +27,12 @@ export type AmplifyDependentResourcesAttributes = {
             "CloudFrontDomainName": "string",
             "CloudFrontSecureURL": "string",
             "CloudFrontOriginAccessIdentity": "string"
+        }
+    },
+    "storage": {
+        "s3amphwadongstorage74a639ac": {
+            "BucketName": "string",
+            "Region": "string"
         }
     }
 }

@@ -5,7 +5,6 @@ import {
   Authenticator,
   Button,
   Pagination,
-  SelectField,
   TabItem,
   Table,
   TableBody,
@@ -17,15 +16,14 @@ import {
   usePagination,
 } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutation from '../graphql/mutations';
 import { listPosts } from '../graphql/queries';
-import PostsCreateForm, {
-  PostsCreateFormInputValues,
-  PostsCreateFormValidationValues,
-  ValidationResponse,
-} from '../ui-components/PostsCreateForm';
-import { Type } from '../models';
+import { PostsCreateFormInputValues } from '../ui-components/PostsCreateForm';
+import { LazyPosts, Posts, Type } from '../models';
+import { DataStore } from '@aws-amplify/datastore';
+import * as mutations from '../graphql/mutations';
+import { createPosts } from '../graphql/mutations';
 
 interface PropsType {
   postType: string;
@@ -36,25 +34,34 @@ const ContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
   padding: 2rem 4rem;
+
+  .form-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .post-create-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 640px;
+    height: 640px;
+    border: 1px solid black;
+  }
 `;
 
-// const apiKey = 'da2-brh5jb5dw5biboz6hzj243f6du';
-// const apiName = 'amphwadong-staging';
-// const options = {
-//   headers: {
-//     Authorization: `bearer ${apiKey}`,
-//   },
-// };
-
-const PAGINATION_LIMIT = 10;
-
-const PostCreate = ({ postType }: PropsType) => {
+const NewPostCreate = ({ postType }: PropsType) => {
   const [list, setList] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [type, setType] = useState('ALL');
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [nextToken, setNextToken] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [title, setTitle] = useState<string>('');
+  const [desc, setDesc] = useState<string>('');
+  const [filePath, setFilePath] = useState<string>('');
+  const [file, setFile] = useState<File | undefined>(undefined);
 
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
@@ -65,6 +72,7 @@ const PostCreate = ({ postType }: PropsType) => {
     setList(data.listPosts.items);
     setStartedAt(data.listPosts?.startedAt);
     setNextToken(data.listPosts.nextToken);
+    console.log(data);
   };
 
   const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -106,6 +114,76 @@ const PostCreate = ({ postType }: PropsType) => {
     );
   }
 
+  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectFile = e.target ? e.target?.files : null;
+    console.log('file', selectFile);
+    const file = selectFile
+      ? selectFile[0]
+        ? selectFile[0]
+        : undefined
+      : undefined;
+    if (file) {
+      setFile(file);
+    }
+  };
+
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const onDescChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDesc(e.target.value);
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (file) {
+      const { key } = await Storage.put(title, file, {
+        contentType: 'image/*',
+        level: 'public',
+        customPrefix: {
+          public: postType === 'NOTICE' ? 'public/notice/' : 'public/report/',
+        },
+      });
+      setFilePath(key);
+    }
+
+    console.log('key', filePath);
+    const curr = new Date();
+    const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+    const today = new Date(utc + KR_TIME_DIFF);
+    const created = `${today.getFullYear()}-${
+      today.getMonth() + 1 < 10
+        ? '0' + (today.getMonth() + 1)
+        : today.getMonth() + 1
+    }-${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}`;
+    console.log(file);
+
+    const newTodo = await API.graphql({
+      query: mutations.createPosts,
+      variables: {
+        input: {
+          title: title,
+          desc: desc,
+          createdAt: created,
+          type: postType === 'NOTICE' ? Type.NOTICE : Type.REPORT,
+          filePath: '',
+        },
+      },
+    });
+
+    setTitle('');
+    setDesc('');
+    try {
+      // @ts-ignore
+      e.target[2].value = '';
+      setFile(undefined);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     fetchPost();
   }, [tabIndex, type]);
@@ -126,12 +204,35 @@ const PostCreate = ({ postType }: PropsType) => {
             onChange={(i) => setTabIndex(i as number)}>
             {/* post create */}
             <TabItem title="글쓰기">
-              <PostsCreateForm
-                // onChange={onPostChange}
-                onSubmit={onPostSubmit}
-                onSuccess={onPostSuccess}
-                clearOnSuccess={true}
-              />
+              <div className="form-wrapper">
+                <form className="post-create-form" onSubmit={onSubmit}>
+                  <div className="input-wrapper">
+                    <label htmlFor="title">제목</label>
+                    <input
+                      type="text"
+                      name="title"
+                      onChange={onTitleChange}
+                      value={title}
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <label htmlFor="textarea">게시글</label>
+                    <textarea
+                      name="textarea"
+                      onChange={onDescChange}
+                      value={desc}
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <label htmlFor="file">파일</label>
+                    <input type="file" name="file" onChange={onFileSelect} />
+                  </div>
+                  <div className="input-wrapper">
+                    <button className="input-btn">clear</button>
+                    <input type="submit" className="input-btn" />
+                  </div>
+                </form>
+              </div>
             </TabItem>
             {/* table */}
             <TabItem title="목록 보기">
@@ -151,11 +252,8 @@ const PostCreate = ({ postType }: PropsType) => {
                       )
                       .filter((item) => {
                         return item['type'] === postType;
-                        // ? item['type']
-                        // : type === item['type'];
                       })
                       .map((item, index) => {
-                        // if (index + 1 > PAGINATION_LIMIT) return null;
                         return (
                           <TableRow key={index}>
                             <TableCell
@@ -184,4 +282,4 @@ const PostCreate = ({ postType }: PropsType) => {
   );
 };
 
-export default PostCreate;
+export default NewPostCreate;
