@@ -46,7 +46,7 @@ const Contact = () => {
   return (
     <ContainerStyle ref={ref}>
       <img src={map} alt="map" width={`${isMobileDevice ? '600px' : '100%'}`} />
-      <Instagram width="28px" height="28px" />
+      {/*<Instagram width="28px" height="28px" />*/}
       <div className="contact__inner">
         <a className="contact__inner--content" href="tel:02-751-9894">
           <span className="contact__inner--thin">tel | </span>

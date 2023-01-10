@@ -38,7 +38,7 @@ const MobileFooter = () => {
         <p>사업자등록번호 | 104 - 82 - 10204</p>
         <p>대표번호 | 02 - 751 - 9898</p>
         <p>이메일 | hwadongcf@naver.com</p>
-        <p>주소 | 서울특별시 중구 서소문로 100</p>
+        <p>주소 | 서울특별시 중구 칠패로 37</p>
         <p style={{ padding: '4px 0' }}>
           COPYRIGHT (C) 2022 KSA ALL RIGHTS RESERVED.
         </p>
