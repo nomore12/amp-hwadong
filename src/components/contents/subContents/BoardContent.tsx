@@ -51,8 +51,11 @@ const ContainerStyle = styled.div`
     //position: relative;
     ////z-index: 3;
     //pointer-events: none;
-    border: 1px solid black;
-    padding: 8px 0;
+    border: 1px solid rgba(39, 39, 42, 0.6);
+    padding: 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    color: rgba(39, 39, 42, 0.6);
   }
 
   & * {
@@ -149,7 +152,7 @@ const BoardContent = () => {
                 className="link pdf-download"
                 onClick={() => {
                   console.log('download');
-                  saveAs(imgUrl, 'download.pdf', true);
+                  saveAs(imgUrl, imgUrl + '.pdf');
                 }}>
                 파일 다운로드
               </button>
