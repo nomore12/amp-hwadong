@@ -50,6 +50,18 @@ const ContainerStyle = styled.div`
     height: 640px;
     border: 1px solid black;
   }
+
+  .input-wrapper {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .input-btn {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 8px;
+  }
 `;
 
 const NewPostCreate = ({ postType }: PropsType) => {
@@ -220,6 +232,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
                       name="title"
                       onChange={onTitleChange}
                       value={title}
+                      style={{ width: '400px' }}
                     />
                   </div>
                   <div className="input-wrapper">
@@ -228,6 +241,11 @@ const NewPostCreate = ({ postType }: PropsType) => {
                       name="textarea"
                       onChange={onDescChange}
                       value={desc}
+                      style={{
+                        width: '400px',
+                        height: '320px',
+                        resize: 'none',
+                      }}
                     />
                   </div>
                   <div className="input-wrapper">

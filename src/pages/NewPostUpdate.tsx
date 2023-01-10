@@ -13,7 +13,7 @@ import { createPosts, deletePosts, updatePosts } from '../graphql/mutations';
 const ContainerStyle = styled.div`
   width: 100%;
   display: flex;
-  //flex-direction: column;
+  flex-direction: column;
   padding: 2rem 4rem;
 
   .form-wrapper {
@@ -34,6 +34,7 @@ const ContainerStyle = styled.div`
   .input-wrapper {
     display: flex;
     gap: 8px;
+    padding: 10px;
   }
 
   .input-btn {
@@ -161,39 +162,52 @@ const NewPostUpdate = () => {
 
   return (
     <ContainerStyle>
-      {type === 'NOTICE' ? (
-        <div>
-          <img width="400px" src={img} alt="img" />
-        </div>
-      ) : (
-        <div>report</div>
-      )}
+      <div>
+        <Button onClick={() => navigate('/login')}>
+          관리자 페이지 메인으로 돌아가기
+        </Button>
+      </div>
+      <div>
+        {type === 'NOTICE' ? (
+          <div>
+            <img width="400px" src={img} alt="img" />
+          </div>
+        ) : (
+          <div>report</div>
+        )}
 
-      <div className="form-wrapper">
-        <form className="post-create-form" onSubmit={onSubmit}>
-          <div className="input-wrapper">
-            <label htmlFor="title">제목</label>
-            <input
-              type="text"
-              name="title"
-              onChange={onTitleChange}
-              value={title}
-            />
-          </div>
-          <div className="input-wrapper">
-            <label htmlFor="textarea">게시글</label>
-            <textarea name="textarea" onChange={onDescChange} value={desc} />
-          </div>
-          <div className="input-wrapper">
-            <label htmlFor="file">파일</label>
-            <input type="file" name="file" onChange={onFileSelect} />
-          </div>
-          <div className="input-wrapper">
-            <Button onClick={onDelete}>삭제</Button>
-            <Button>clear</Button>
-            <input type="submit" className="input-btn" />
-          </div>
-        </form>
+        <div className="form-wrapper">
+          <form className="post-create-form" onSubmit={onSubmit}>
+            <div className="input-wrapper">
+              <label htmlFor="title">제목</label>
+              <input
+                style={{ width: '400px' }}
+                type="text"
+                name="title"
+                onChange={onTitleChange}
+                value={title}
+              />
+            </div>
+            <div className="input-wrapper">
+              <label htmlFor="textarea">게시글</label>
+              <textarea
+                name="textarea"
+                onChange={onDescChange}
+                value={desc}
+                style={{ width: '400px', height: '320px', resize: 'none' }}
+              />
+            </div>
+            <div className="input-wrapper">
+              <label htmlFor="file">파일</label>
+              <input type="file" name="file" onChange={onFileSelect} />
+            </div>
+            <div className="input-wrapper">
+              <Button onClick={onDelete}>삭제</Button>
+              <Button>clear</Button>
+              <input type="submit" className="input-btn" />
+            </div>
+          </form>
+        </div>
       </div>
     </ContainerStyle>
   );
