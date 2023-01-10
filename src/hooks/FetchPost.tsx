@@ -14,15 +14,20 @@ const useFetchPost = () => {
   const fetchPost = async () => {
     const posts = await API.graphql(graphqlOperation(listPosts));
     const { data } = { ...posts } as any;
-    const lists = data.listPosts.items.map((item: any, index: any) => {
-      return {
-        uuid: item['id'],
-        subject: item['title'],
-        createdAt: item['createdAt'],
-        type: item['type'],
-        id: index + 1,
-      };
-    });
+    const lists = data.listPosts.items
+      .filter((item: any) => !item['_deleted'])
+      .sort((prev: any, curr: any) =>
+        prev.createdAt < curr.createdAt ? 1 : -1
+      )
+      .map((item: any, index: any) => {
+        return {
+          uuid: item['id'],
+          subject: item['title'],
+          createdAt: item['createdAt'],
+          type: item['type'],
+          id: index + 1,
+        };
+      });
     // .filter((item: any) => item.type === type);
     setList(lists);
   };

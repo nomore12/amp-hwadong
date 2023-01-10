@@ -24,6 +24,7 @@ import { LazyPosts, Posts, Type } from '../models';
 import { DataStore } from '@aws-amplify/datastore';
 import * as mutations from '../graphql/mutations';
 import { createPosts } from '../graphql/mutations';
+import { getRandomKey } from 'key-maker-woongs';
 
 interface PropsType {
   postType: string;
@@ -137,16 +138,6 @@ const NewPostCreate = ({ postType }: PropsType) => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (file) {
-      const { key } = await Storage.put(title, file, {
-        contentType: 'image/*',
-        level: 'public',
-        customPrefix: {
-          public: postType === 'NOTICE' ? 'public/notice/' : 'public/report/',
-        },
-      });
-      setFilePath(key);
-    }
 
     console.log('key', filePath);
     const curr = new Date();
@@ -159,8 +150,10 @@ const NewPostCreate = ({ postType }: PropsType) => {
         : today.getMonth() + 1
     }-${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}`;
     console.log(file);
-
-    const newTodo = await API.graphql({
+    const uniqueKey = getRandomKey();
+    setFilePath(uniqueKey);
+    console.log(uniqueKey);
+    const newPost = await API.graphql({
       query: mutations.createPosts,
       variables: {
         input: {
@@ -168,10 +161,24 @@ const NewPostCreate = ({ postType }: PropsType) => {
           desc: desc,
           createdAt: created,
           type: postType === 'NOTICE' ? Type.NOTICE : Type.REPORT,
-          filePath: '',
+          filePath: uniqueKey,
         },
       },
     });
+
+    const { data } = newPost as any;
+
+    console.log(newPost);
+    if (file) {
+      const { key } = await Storage.put(uniqueKey, file, {
+        contentType: 'image/*',
+        level: 'public',
+        customPrefix: {
+          public: postType === 'NOTICE' ? 'public/notice/' : 'public/report/',
+        },
+      });
+      setFilePath(key);
+    }
 
     setTitle('');
     setDesc('');
@@ -225,7 +232,12 @@ const NewPostCreate = ({ postType }: PropsType) => {
                   </div>
                   <div className="input-wrapper">
                     <label htmlFor="file">파일</label>
-                    <input type="file" name="file" onChange={onFileSelect} />
+                    <input
+                      type="file"
+                      name="file"
+                      accept={postType === 'NOTICE' ? 'image/*' : '.pdf'}
+                      onChange={onFileSelect}
+                    />
                   </div>
                   <div className="input-wrapper">
                     <button className="input-btn">clear</button>
@@ -251,7 +263,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
                         prev['createdAt'] > next['createdAt'] ? -1 : 1
                       )
                       .filter((item) => {
-                        return item['type'] === postType;
+                        return item['type'] === postType && !item['_deleted'];
                       })
                       .map((item, index) => {
                         return (
@@ -272,7 +284,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
                         );
                       })}
                 </TableBody>
-                <Pagination currentPage={1} totalPages={10} siblingCount={1} />
+                {/*<Pagination currentPage={1} totalPages={10} siblingCount={1} />*/}
               </Table>
             </TabItem>
           </Tabs>

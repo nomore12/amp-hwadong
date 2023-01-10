@@ -6,8 +6,9 @@ import { animateScroll } from 'react-scroll';
 import { useAppDispatch } from '../../../store/Hooks';
 import useMouseEventHook from '../../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as queries from 'src/graphql/queries';
+import { saveAs } from 'file-saver';
 
 interface PropsType {
   id?: number;
@@ -41,6 +42,19 @@ const ContainerStyle = styled.div`
     white-space: pre-wrap;
   }
 
+  .notice-img {
+    padding-left: 4.5rem;
+    max-width: 560px;
+  }
+
+  .pdf-download {
+    //position: relative;
+    ////z-index: 3;
+    //pointer-events: none;
+    border: 1px solid black;
+    padding: 8px 0;
+  }
+
   & * {
     list-style: none;
   }
@@ -54,6 +68,7 @@ const BoardContent = () => {
   const [type, setType] = useState('');
   const [contentData, setContentData] = useState<any>();
   const [loading, setLoading] = useState(true);
+  const [imgUrl, setImgUrl] = useState('');
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -73,6 +88,13 @@ const BoardContent = () => {
     const { data } = { ...post } as any;
     setContentData(data.getPosts);
     setLoading(false);
+    setType(data.getPosts.type);
+    console.log(data);
+    const fileKey = `${data.getPosts.type?.toLowerCase()}/${
+      data.getPosts.filePath
+    }`;
+    const url = await Storage.get(fileKey);
+    setImgUrl(url);
   };
 
   useEffect(() => {
@@ -83,7 +105,7 @@ const BoardContent = () => {
     dispatch(changeText('back'));
     dispatch(
       changeSubject(
-        location.pathname === '/main/notice' ? '공지사항' : '연간사업보고'
+        location.pathname.includes('notice') ? '공지사항' : '연간사업보고'
       )
     );
 
@@ -114,6 +136,25 @@ const BoardContent = () => {
             type={contentData.type}
             uuid={contentData.id}
           />
+          {type === 'NOTICE' ? (
+            <div>
+              <img className="notice-img" src={imgUrl} />
+            </div>
+          ) : (
+            <div
+              className="link"
+              onMouseEnter={(e) => onMouseEnter(e, ' ')}
+              onMouseLeave={(e) => onMouseLeave(e, 'back')}>
+              <button
+                className="link pdf-download"
+                onClick={() => {
+                  console.log('download');
+                  saveAs(imgUrl, 'download.pdf', true);
+                }}>
+                파일 다운로드
+              </button>
+            </div>
+          )}
           <p className="board-content-area">{contentData.desc}</p>
         </>
       )}

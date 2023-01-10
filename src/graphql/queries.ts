@@ -77,6 +77,7 @@ export const getPosts = /* GraphQL */ `
       desc
       createdAt
       type
+      filePath
       updatedAt
       _version
       _deleted
@@ -97,6 +98,7 @@ export const listPosts = /* GraphQL */ `
         desc
         createdAt
         type
+        filePath
         updatedAt
         _version
         _deleted
@@ -126,6 +128,7 @@ export const syncPosts = /* GraphQL */ `
         desc
         createdAt
         type
+        filePath
         updatedAt
         _version
         _deleted

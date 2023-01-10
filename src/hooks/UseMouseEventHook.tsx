@@ -9,7 +9,9 @@ const useMouseEventHook = () => {
   const navigate = useNavigate();
 
   const onMouseEnter = (
-    e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLSpanElement>,
+    e: React.MouseEvent<
+      HTMLDivElement | HTMLAnchorElement | HTMLSpanElement | HTMLAnchorElement
+    >,
     text?: string
   ) => {
     text ? dispatch(changeCurr(text)) : dispatch(changeCurr('more'));
@@ -17,7 +19,9 @@ const useMouseEventHook = () => {
   };
 
   const onMouseLeave = (
-    e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLSpanElement>,
+    e: React.MouseEvent<
+      HTMLDivElement | HTMLAnchorElement | HTMLSpanElement | HTMLAnchorElement
+    >,
     text?: string
   ) => {
     text ? dispatch(changeCurr(text)) : dispatch(changeCurr('main'));
