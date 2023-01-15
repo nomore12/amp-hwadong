@@ -92,12 +92,14 @@ const BoardContent = () => {
     setContentData(data.getPosts);
     setLoading(false);
     setType(data.getPosts.type);
-    console.log(data);
     const fileKey = `${data.getPosts.type?.toLowerCase()}/${
       data.getPosts.filePath
     }`;
     const url = await Storage.get(fileKey);
-    setImgUrl(url);
+    const key = fileKey.split('/');
+    console.log(url, key);
+    if (key[1] === '' || key[1] === 'null') setImgUrl('');
+    else setImgUrl(url);
   };
 
   useEffect(() => {
@@ -113,7 +115,7 @@ const BoardContent = () => {
     );
 
     window.addEventListener('focus', eventListener);
-
+    console.log(imgUrl);
     return () => {
       dispatch(changeCurr('main'));
       dispatch(changeText(''));
@@ -140,23 +142,23 @@ const BoardContent = () => {
             uuid={contentData.id}
           />
           {type === 'NOTICE' ? (
-            <div>
-              <img className="notice-img" src={imgUrl} />
-            </div>
+            <div>{imgUrl && <img className="notice-img" src={imgUrl} />}</div>
           ) : (
-            <div
-              className="link"
-              onMouseEnter={(e) => onMouseEnter(e, ' ')}
-              onMouseLeave={(e) => onMouseLeave(e, 'back')}>
-              <button
-                className="link pdf-download"
-                onClick={() => {
-                  console.log('download');
-                  saveAs(imgUrl, imgUrl + '.pdf');
-                }}>
-                파일 다운로드
-              </button>
-            </div>
+            imgUrl && (
+              <div
+                className="link"
+                onMouseEnter={(e) => onMouseEnter(e, ' ')}
+                onMouseLeave={(e) => onMouseLeave(e, 'back')}>
+                <button
+                  className="link pdf-download"
+                  onClick={() => {
+                    console.log('download');
+                    saveAs(imgUrl, imgUrl + '.pdf');
+                  }}>
+                  파일 다운로드
+                </button>
+              </div>
+            )
           )}
           <p className="board-content-area">{contentData.desc}</p>
         </>
