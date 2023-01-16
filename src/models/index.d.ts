@@ -57,6 +57,7 @@ type EagerPosts = {
   readonly createdAt?: string | null;
   readonly type?: Type | keyof typeof Type | null;
   readonly filePath?: string | null;
+  readonly filename?: string | null;
   readonly updatedAt?: string | null;
 }
 
@@ -71,6 +72,7 @@ type LazyPosts = {
   readonly createdAt?: string | null;
   readonly type?: Type | keyof typeof Type | null;
   readonly filePath?: string | null;
+  readonly filename?: string | null;
   readonly updatedAt?: string | null;
 }
 

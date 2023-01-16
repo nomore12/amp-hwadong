@@ -18,12 +18,14 @@ export declare type PostsUpdateFormInputValues = {
     desc?: string;
     createdAt?: string;
     type?: string;
+    filename?: string;
 };
 export declare type PostsUpdateFormValidationValues = {
     title?: ValidationFunction<string>;
     desc?: ValidationFunction<string>;
     createdAt?: ValidationFunction<string>;
     type?: ValidationFunction<string>;
+    filename?: ValidationFunction<string>;
 };
 export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PostsUpdateFormOverridesProps = {
@@ -32,6 +34,7 @@ export declare type PostsUpdateFormOverridesProps = {
     desc?: FormProps<TextAreaFieldProps>;
     createdAt?: FormProps<TextFieldProps>;
     type?: FormProps<SelectFieldProps>;
+    filename?: FormProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type PostsUpdateFormProps = React.PropsWithChildren<{
     overrides?: PostsUpdateFormOverridesProps | undefined | null;

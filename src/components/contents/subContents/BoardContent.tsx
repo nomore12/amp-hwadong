@@ -8,7 +8,7 @@ import useMouseEventHook from '../../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as queries from 'src/graphql/queries';
-import { saveAs } from 'file-saver';
+import FileSaver, { saveAs } from 'file-saver';
 
 interface PropsType {
   id?: number;
@@ -72,6 +72,8 @@ const BoardContent = () => {
   const [contentData, setContentData] = useState<any>();
   const [loading, setLoading] = useState(true);
   const [imgUrl, setImgUrl] = useState('');
+  const [pdfKey, setPdfKey] = useState('');
+  const [filename, setFilename] = useState('');
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -92,14 +94,30 @@ const BoardContent = () => {
     setContentData(data.getPosts);
     setLoading(false);
     setType(data.getPosts.type);
+    setFilename(data.getPosts.filename);
+    console.log('data', data.getPosts);
     const fileKey = `${data.getPosts.type?.toLowerCase()}/${
       data.getPosts.filePath
     }`;
+
+    console.log('file key', fileKey);
     const url = await Storage.get(fileKey);
+    console.log(fileKey);
+    type === 'REPORT' && setPdfKey(fileKey);
+    console.log('url', url);
     const key = fileKey.split('/');
     console.log(url, key);
     if (key[1] === '' || key[1] === 'null') setImgUrl('');
     else setImgUrl(url);
+  };
+
+  const downloadFile = async (key: string) => {
+    const result = await Storage.get(key, {
+      download: true,
+      contentType: 'application/pdf',
+    });
+    saveAs(result.Body as Blob, filename);
+    console.log(result);
   };
 
   useEffect(() => {
@@ -151,9 +169,8 @@ const BoardContent = () => {
                 onMouseLeave={(e) => onMouseLeave(e, 'back')}>
                 <button
                   className="link pdf-download"
-                  onClick={() => {
-                    console.log('download');
-                    saveAs(imgUrl, imgUrl + '.pdf');
+                  onClick={async () => {
+                    await downloadFile(pdfKey);
                   }}>
                   파일 다운로드
                 </button>

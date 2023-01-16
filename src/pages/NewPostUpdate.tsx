@@ -55,6 +55,7 @@ const NewPostUpdate = () => {
   const [postFilePath, setPostFilePath] = useState<string>('');
   const [file, setFile] = useState<File | undefined>(undefined);
   const [img, setImg] = useState<string>('');
+  const [filename, setFilename] = useState('');
   const submitRef = useRef();
 
   async function getPost() {
@@ -74,6 +75,7 @@ const NewPostUpdate = () => {
       type: postType,
       _version,
       filePath,
+      fileName,
     } = data.getPosts;
     setTitle(title);
     setDesc(desc);
@@ -81,6 +83,7 @@ const NewPostUpdate = () => {
     setType(postType);
     setVersion(_version);
     setPostFilePath(filePath);
+    setFilename(fileName);
     console.log('filepath', filePath);
 
     const fileKey = `${postType.toLowerCase()}/${filePath}`;
@@ -109,6 +112,7 @@ const NewPostUpdate = () => {
       createdAt: createdAt,
       type: type,
       filePath: postFilePath,
+      filename: filename,
       _version: version,
     };
 
@@ -154,6 +158,7 @@ const NewPostUpdate = () => {
       : undefined;
     if (file) {
       setFile(file);
+      setFilename(file.name);
     }
   };
 

@@ -106,6 +106,10 @@ const ContainerStyle = styled.div`
     }
   }
 
+  .carousel-img-slide {
+    height: 420px;
+  }
+
   //img {
   //  width: 100%;
   //  align-self: center;
@@ -123,21 +127,6 @@ const ContainerStyle = styled.div`
     }
   }
 `;
-
-const imgArr = [
-  {
-    img: 'https://images.unsplash.com/photo-1664362597715-d6089e55ae89?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80',
-    desc: 'first',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1664380619406-49883ee01a55?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2338&q=80',
-    desc: 'second',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1664388519483-9fdcbdba13a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    desc: 'third',
-  },
-];
 
 const Gallery = ({ type }: PropsType) => {
   const state = useAppSelector((state) => state.cursor);
@@ -195,6 +184,7 @@ const Gallery = ({ type }: PropsType) => {
       </div>
       <div className={`carousel-container carousel-item`}>
         <Carousel
+          style={{ height: '420px' }}
           className={`carousel-item`}
           autoplay
           autoplayInterval={3000}
@@ -227,7 +217,10 @@ const Gallery = ({ type }: PropsType) => {
             list.map((item, key) => {
               return (
                 <div key={key} className={`carousel-item ${item.key}`}>
-                  <img src={item.url} className={`carousel-item`} />
+                  <img
+                    src={item.url}
+                    className={`carousel-item carousel-img-slide`}
+                  />
                   {/*<p className={`carousel-item carousel-desc`}>{item.key}</p>*/}
                 </div>
               );

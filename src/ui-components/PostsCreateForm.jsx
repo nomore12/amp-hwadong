@@ -35,17 +35,20 @@ export default function PostsCreateForm(props) {
     desc: undefined,
     createdAt: undefined,
     type: undefined,
+    filename: undefined,
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [desc, setDesc] = React.useState(initialValues.desc);
   const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
   const [type, setType] = React.useState(initialValues.type);
+  const [filename, setFilename] = React.useState(initialValues.filename);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setTitle(initialValues.title);
     setDesc(initialValues.desc);
     setCreatedAt(initialValues.createdAt);
     setType(initialValues.type);
+    setFilename(initialValues.filename);
     setErrors({});
   };
   const validations = {
@@ -53,6 +56,7 @@ export default function PostsCreateForm(props) {
     desc: [{ type: "Required" }],
     createdAt: [],
     type: [],
+    filename: [],
   };
   const runValidationTasks = async (fieldName, value) => {
     let validationResponse = validateField(value, validations[fieldName]);
@@ -76,6 +80,7 @@ export default function PostsCreateForm(props) {
           desc,
           createdAt,
           type,
+          filename,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -128,6 +133,7 @@ export default function PostsCreateForm(props) {
               desc,
               createdAt,
               type,
+              filename,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -154,6 +160,7 @@ export default function PostsCreateForm(props) {
               desc: value,
               createdAt,
               type,
+              filename,
             };
             const result = onChange(modelFields);
             value = result?.desc ?? value;
@@ -181,6 +188,7 @@ export default function PostsCreateForm(props) {
               desc,
               createdAt: value,
               type,
+              filename,
             };
             const result = onChange(modelFields);
             value = result?.createdAt ?? value;
@@ -208,6 +216,7 @@ export default function PostsCreateForm(props) {
               desc,
               createdAt,
               type: value,
+              filename,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -233,6 +242,33 @@ export default function PostsCreateForm(props) {
           {...getOverrideProps(overrides, "typeoption1")}
         ></option>
       </SelectField>
+      <TextField
+        label="Filename"
+        isRequired={false}
+        isReadOnly={false}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              title,
+              desc,
+              createdAt,
+              type,
+              filename: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.filename ?? value;
+          }
+          if (errors.filename?.hasError) {
+            runValidationTasks("filename", value);
+          }
+          setFilename(value);
+        }}
+        onBlur={() => runValidationTasks("filename", filename)}
+        errorMessage={errors.filename?.errorMessage}
+        hasError={errors.filename?.hasError}
+        {...getOverrideProps(overrides, "filename")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

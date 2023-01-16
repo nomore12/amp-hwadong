@@ -75,6 +75,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
   const [desc, setDesc] = useState<string>('');
   const [filePath, setFilePath] = useState<string>('');
   const [file, setFile] = useState<File | undefined>(undefined);
+  const [filename, setFilename] = useState('');
 
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
@@ -139,6 +140,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
       : undefined;
     if (file) {
       setFile(file);
+      setFilename(file.name);
     }
   };
 
@@ -157,12 +159,6 @@ const NewPostCreate = ({ postType }: PropsType) => {
     const curr = new Date();
     const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
     const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-    // const today = new Date(utc + KR_TIME_DIFF);
-    // const created = `${today.getFullYear()}-${
-    //   today.getMonth() + 1 < 10
-    //     ? '0' + (today.getMonth() + 1)
-    //     : today.getMonth() + 1
-    // }-${today.getDate() < 10 ? '0' +    today.getDate() : today.getDate()}`;
     const created = new Date(utc + KR_TIME_DIFF).toISOString();
     console.log(created);
 
@@ -179,6 +175,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
           createdAt: created,
           type: postType === 'NOTICE' ? Type.NOTICE : Type.REPORT,
           filePath: uniqueKey,
+          filename: postType === 'REPORT' && file ? filename : '',
         },
       },
     });

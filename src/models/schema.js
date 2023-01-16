@@ -121,6 +121,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "filename": {
+                    "name": "filename",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "updatedAt": {
                     "name": "updatedAt",
                     "isArray": false,
@@ -174,5 +181,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.2",
-    "version": "2798e2206fa34676276203d32f252c02"
+    "version": "5d2a323e3f34a7b541c644ceed0844b5"
 };

@@ -135,6 +135,14 @@ const GalleryCreate = ({ type }: PropsType) => {
     setTimeout(() => window.location.reload(), 500);
   };
 
+  const onUpdate = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    key: string
+  ) => {
+    //
+    console.log(list);
+  };
+
   useEffect(() => {
     getList();
   }, [refresh]);
@@ -172,6 +180,9 @@ const GalleryCreate = ({ type }: PropsType) => {
                   <div className="item-content">
                     <div>{item.key?.substring(4, item.key?.length)}</div>
                     <div className="btn-wrapper">
+                      <Button onClick={(e) => onUpdate(e, item.key as string)}>
+                        수정하기
+                      </Button>
                       <Button
                         className="list-btn"
                         onClick={(e) =>
