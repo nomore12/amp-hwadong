@@ -179,7 +179,16 @@ const GalleryCreate = ({ type }: PropsType) => {
                   </div>
                   <div className="item-content">
                     <div>{item.key?.substring(4, item.key?.length)}</div>
+                    <input
+                      type="text"
+                      defaultValue={item.key?.substring(4, item.key?.length)}
+                    />
                     <div className="btn-wrapper">
+                      <input
+                        style={{ width: '250px' }}
+                        type="file"
+                        accept="image/*"
+                      />
                       <Button onClick={(e) => onUpdate(e, item.key as string)}>
                         수정하기
                       </Button>
