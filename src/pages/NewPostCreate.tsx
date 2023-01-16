@@ -82,6 +82,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
       query: listPosts,
     });
     const { data } = { ...posts } as any;
+    console.log('data', data);
     setList(data.listPosts.items);
     setStartedAt(data.listPosts?.startedAt);
     setNextToken(data.listPosts.nextToken);
@@ -104,13 +105,14 @@ const NewPostCreate = ({ postType }: PropsType) => {
   };
 
   const onPostSubmit = (data: PostsCreateFormInputValues) => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate();
-    const awsDate = `${year}-${month >= 10 ? month : '0' + month}-${
-      date >= 10 ? date : '0' + date
-    }`;
+    // const today = new Date();
+    // const year = today.getFullYear();
+    // const month = today.getMonth() + 1;
+    // const date = today.getDate();
+    // const awsDate = `${year}-${month >= 10 ? month : '0' + month}-${
+    //   date >= 10 ? date : '0' + date
+    // }`;
+    const awsDate = new Date().toISOString();
 
     const result = {
       ...data,
@@ -155,14 +157,17 @@ const NewPostCreate = ({ postType }: PropsType) => {
     const curr = new Date();
     const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
     const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-    const today = new Date(utc + KR_TIME_DIFF);
-    const created = `${today.getFullYear()}-${
-      today.getMonth() + 1 < 10
-        ? '0' + (today.getMonth() + 1)
-        : today.getMonth() + 1
-    }-${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}`;
+    // const today = new Date(utc + KR_TIME_DIFF);
+    // const created = `${today.getFullYear()}-${
+    //   today.getMonth() + 1 < 10
+    //     ? '0' + (today.getMonth() + 1)
+    //     : today.getMonth() + 1
+    // }-${today.getDate() < 10 ? '0' +    today.getDate() : today.getDate()}`;
+    const created = new Date(utc + KR_TIME_DIFF).toISOString();
+    console.log(created);
+
     console.log(file);
-    const uniqueKey = getRandomKey();
+    const uniqueKey = file ? getRandomKey() : '';
     setFilePath(uniqueKey);
     console.log(uniqueKey);
     const newPost = await API.graphql({

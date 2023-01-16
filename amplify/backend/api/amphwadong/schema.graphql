@@ -7,7 +7,7 @@ type ImagePost @model @auth(rules: [{allow: public}]) {
   id: ID!
   desc: String
   imgKey: String
-  createdAt: AWSDate
+  createdAt: AWSDateTime
   type: ImagePostType
 }
 
@@ -20,7 +20,7 @@ type Posts @model @auth(rules: [{allow: public}]) {
   id: ID!
   title: String
   desc: String
-  createdAt: AWSDate
+  createdAt: AWSDateTime
   type: Type
   filePath: String
 }

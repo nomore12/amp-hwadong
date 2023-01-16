@@ -25,7 +25,7 @@ import PostsCreateForm, {
   PostsCreateFormValidationValues,
   ValidationResponse,
 } from '../ui-components/PostsCreateForm';
-import { Type } from '../models';
+import { format } from 'date-fns';
 
 interface PropsType {
   postType: string;
@@ -87,9 +87,10 @@ const PostCreate = ({ postType }: PropsType) => {
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
     const date = today.getDate();
-    const awsDate = `${year}-${month >= 10 ? month : '0' + month}-${
-      date >= 10 ? date : '0' + date
-    }`;
+    // const awsDate = `${year}-${month >= 10 ? month : '0' + month}-${
+    //   date >= 10 ? date : '0' + date
+    // }`;
+    const awsDate = new Date().toISOString();
 
     const result = {
       ...data,

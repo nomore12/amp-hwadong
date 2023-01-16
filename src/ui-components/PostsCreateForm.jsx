@@ -188,7 +188,7 @@ export default function PostsCreateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(value);
+          setCreatedAt(new Date(value).toISOString());
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}

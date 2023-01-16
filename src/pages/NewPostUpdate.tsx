@@ -88,7 +88,8 @@ const NewPostUpdate = () => {
     // console.log(url, fileKey);
     console.log(fileKey, url);
     console.log('post', data.getPosts);
-    url && setImg(url);
+    const key = fileKey.split('/')[1];
+    key !== '' ? setImg(url) : setImg('');
   }
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,9 +170,7 @@ const NewPostUpdate = () => {
       </div>
       <div>
         {type === 'NOTICE' ? (
-          <div>
-            <img width="400px" src={img} alt="img" />
-          </div>
+          <div>{img && <img width="400px" src={img} alt="img" />}</div>
         ) : (
           <div>report</div>
         )}

@@ -171,7 +171,7 @@ export default function ImagePostCreateForm(props) {
         label="Created at"
         isRequired={false}
         isReadOnly={false}
-        type="date"
+        type="datetime-local"
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -187,7 +187,7 @@ export default function ImagePostCreateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(value);
+          setCreatedAt(new Date(value).toISOString());
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}

@@ -39,7 +39,8 @@
     "web-vitals": "^2.1.4",
     "key-maker-woongs": "^0.0.4",
     "file-saver": "^2.0.5",
-    "@types/file-saver": "^2.0.5"
+    "@types/file-saver": "^2.0.5",
+    "date-fns": "^2.29.3"
   },
   "scripts": {
     "start": "react-scripts start",

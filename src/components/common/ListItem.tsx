@@ -73,7 +73,7 @@ const ListItem = ({ index, subject, createdAt, type, uuid }: PropsType) => {
         }}>
         <div className="list-item__index">{index}</div>
         <div className="list-item__subject">{subject}</div>
-        <div className="list-item__created-at">{createdAt}</div>
+        <div className="list-item__created-at">{createdAt.slice(0, 10)}</div>
       </Link>
     </ContainerStyle>
   );
