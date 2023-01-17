@@ -188,16 +188,16 @@ const GalleryCreate = ({ type }: PropsType) => {
       <div className="imglist-wrapper">
         {list ? (
           list
-            .sort((item) => {
-              return (item.key?.split('/')[item.key?.split('/').length - 2]
-                ? item.key?.split('/')[item.key?.split('/').length - 2]
-                : '0') >
-                (item.key?.split('/')[item.key?.split('/').length - 2]
-                  ? item.key?.split('/')[item.key?.split('/').length - 2]
-                  : '0')
-                ? 1
-                : -1;
-            })
+            // .sort((item) => {
+            //   return (item.key?.split('/')[item.key?.split('/').length - 2]
+            //     ? item.key?.split('/')[item.key?.split('/').length - 2]
+            //     : '0') >
+            //     (item.key?.split('/')[item.key?.split('/').length - 2]
+            //       ? item.key?.split('/')[item.key?.split('/').length - 2]
+            //       : '0')
+            //     ? 1
+            //     : -1;
+            // })
             .map((item, index) => {
               return (
                 <div className="img-items" key={index}>
