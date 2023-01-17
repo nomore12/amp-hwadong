@@ -79,6 +79,7 @@ export const getPosts = /* GraphQL */ `
       type
       filePath
       filename
+      index
       updatedAt
       _version
       _deleted
@@ -101,6 +102,7 @@ export const listPosts = /* GraphQL */ `
         type
         filePath
         filename
+        index
         updatedAt
         _version
         _deleted
@@ -132,6 +134,7 @@ export const syncPosts = /* GraphQL */ `
         type
         filePath
         filename
+        index
         updatedAt
         _version
         _deleted

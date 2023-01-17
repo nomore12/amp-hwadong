@@ -107,6 +107,7 @@ export type CreatePostsInput = {
   type?: Type | null,
   filePath?: string | null,
   filename?: string | null,
+  index?: number | null,
   _version?: number | null,
 };
 
@@ -123,6 +124,7 @@ export type ModelPostsConditionInput = {
   type?: ModelTypeInput | null,
   filePath?: ModelStringInput | null,
   filename?: ModelStringInput | null,
+  index?: ModelIntInput | null,
   and?: Array< ModelPostsConditionInput | null > | null,
   or?: Array< ModelPostsConditionInput | null > | null,
   not?: ModelPostsConditionInput | null,
@@ -131,6 +133,18 @@ export type ModelPostsConditionInput = {
 export type ModelTypeInput = {
   eq?: Type | null,
   ne?: Type | null,
+};
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type Posts = {
@@ -142,6 +156,7 @@ export type Posts = {
   type?: Type | null,
   filePath?: string | null,
   filename?: string | null,
+  index?: number | null,
   updatedAt: string,
   _version: number,
   _deleted?: boolean | null,
@@ -156,6 +171,7 @@ export type UpdatePostsInput = {
   type?: Type | null,
   filePath?: string | null,
   filename?: string | null,
+  index?: number | null,
   _version?: number | null,
 };
 
@@ -206,6 +222,7 @@ export type ModelPostsFilterInput = {
   type?: ModelTypeInput | null,
   filePath?: ModelStringInput | null,
   filename?: ModelStringInput | null,
+  index?: ModelIntInput | null,
   and?: Array< ModelPostsFilterInput | null > | null,
   or?: Array< ModelPostsFilterInput | null > | null,
   not?: ModelPostsFilterInput | null,
@@ -266,8 +283,21 @@ export type ModelSubscriptionPostsFilterInput = {
   type?: ModelSubscriptionStringInput | null,
   filePath?: ModelSubscriptionStringInput | null,
   filename?: ModelSubscriptionStringInput | null,
+  index?: ModelSubscriptionIntInput | null,
   and?: Array< ModelSubscriptionPostsFilterInput | null > | null,
   or?: Array< ModelSubscriptionPostsFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
 };
 
 export type CreateImagePostMutationVariables = {
@@ -345,6 +375,7 @@ export type CreatePostsMutation = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -367,6 +398,7 @@ export type UpdatePostsMutation = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -389,6 +421,7 @@ export type DeletePostsMutation = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -482,6 +515,7 @@ export type GetPostsQuery = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -507,6 +541,7 @@ export type ListPostsQuery = {
       type?: Type | null,
       filePath?: string | null,
       filename?: string | null,
+      index?: number | null,
       updatedAt: string,
       _version: number,
       _deleted?: boolean | null,
@@ -536,6 +571,7 @@ export type SyncPostsQuery = {
       type?: Type | null,
       filePath?: string | null,
       filename?: string | null,
+      index?: number | null,
       updatedAt: string,
       _version: number,
       _deleted?: boolean | null,
@@ -617,6 +653,7 @@ export type OnCreatePostsSubscription = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -638,6 +675,7 @@ export type OnUpdatePostsSubscription = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
@@ -659,6 +697,7 @@ export type OnDeletePostsSubscription = {
     type?: Type | null,
     filePath?: string | null,
     filename?: string | null,
+    index?: number | null,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,

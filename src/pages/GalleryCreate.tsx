@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Storage } from 'aws-amplify';
 import styled from 'styled-components';
-import { Button } from '@aws-amplify/ui-react';
+import { Button, Text } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
 
 interface PropsType {
@@ -97,7 +97,6 @@ const GalleryCreate = ({ type }: PropsType) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDesc(e.target.value);
-    console.log('on change', list);
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +117,6 @@ const GalleryCreate = ({ type }: PropsType) => {
       );
       setRefresh(!refresh);
       setImage(undefined);
-      // window.location.reload();'
       setTimeout(() => window.location.reload(), 500);
     } else {
       // alert('항목을 모두 작성해주세요.');
@@ -148,7 +146,6 @@ const GalleryCreate = ({ type }: PropsType) => {
         image,
         `${originDate}/${desc ? desc : originDesc}`
       ));
-    // setRefresh(!refresh);
     setImage(undefined);
     setTimeout(() => window.location.reload(), 500);
   };
@@ -156,16 +153,18 @@ const GalleryCreate = ({ type }: PropsType) => {
   useEffect(() => {
     (async function fetCh() {
       await getList();
-      console.log(list);
     })();
   }, []);
 
   return (
     <ContainerStyle>
-      <Button onClick={() => navigate('/login')}>
+      <Text fontSize="x-large">
+        {type === 'WCO' ? '세계문화오픈 | WCO' : '기타 목적 사업'}
+      </Text>
+      <Button style={{ width: '100%' }} onClick={() => navigate('/login')}>
         관리자페이지 메인으로 돌아가기
       </Button>
-      <form style={{ padding: '40px' }}>
+      <form style={{ padding: '40px', marginTop: '20px' }}>
         <div>
           <input type="file" onChange={onFileChange} />
         </div>
@@ -187,62 +186,50 @@ const GalleryCreate = ({ type }: PropsType) => {
       </form>
       <div className="imglist-wrapper">
         {list ? (
-          list
-            // .sort((item) => {
-            //   return (item.key?.split('/')[item.key?.split('/').length - 2]
-            //     ? item.key?.split('/')[item.key?.split('/').length - 2]
-            //     : '0') >
-            //     (item.key?.split('/')[item.key?.split('/').length - 2]
-            //       ? item.key?.split('/')[item.key?.split('/').length - 2]
-            //       : '0')
-            //     ? 1
-            //     : -1;
-            // })
-            .map((item, index) => {
-              return (
-                <div className="img-items" key={index}>
-                  <div className="item-wrapper">
-                    <div className="img-wrapper">
-                      <img src={item.url} alt={item.key} />
+          list.map((item, index) => {
+            return (
+              <div className="img-items" key={index}>
+                <div className="item-wrapper">
+                  <div className="img-wrapper">
+                    <img src={item.url} alt={item.key} />
+                  </div>
+                  <div className="item-content">
+                    {/*<div>{item.key?.substring(4, item.key?.length)}</div>*/}
+                    <div style={{ color: 'gray', fontSize: '12px' }}>
+                      내용 수정시 이미지와 글 내용 모두 등록해야 합니다.
                     </div>
-                    <div className="item-content">
-                      {/*<div>{item.key?.substring(4, item.key?.length)}</div>*/}
-                      <div style={{ color: 'gray', fontSize: '12px' }}>
-                        내용 수정시 이미지와 글 내용 모두 등록해야 합니다.
-                      </div>
-                      <div>
-                        {item.key?.split('/')[item.key?.split('/').length - 1]}
-                      </div>
-                      <label htmlFor={item.key}>수정 내용: </label>
-                      <input id={item.key} type="text" onChange={onChange} />
-                      <div className="btn-wrapper">
-                        <input
-                          style={{ width: '250px' }}
-                          type="file"
-                          accept="image/*"
-                          onChange={onFileChange}
-                        />
-                        <Button
-                          onClick={(e) => onUpdate(e, item.key as string)}>
-                          수정하기
-                        </Button>
-                        <Button
-                          className="list-btn"
-                          onClick={(e) =>
-                            onDelete(
-                              e,
-                              item.key ? (item.key as string) : '',
-                              true
-                            )
-                          }>
-                          삭제하기
-                        </Button>
-                      </div>
+                    <div>
+                      {item.key?.split('/')[item.key?.split('/').length - 1]}
+                    </div>
+                    <label htmlFor={item.key}>수정 내용: </label>
+                    <input id={item.key} type="text" onChange={onChange} />
+                    <div className="btn-wrapper">
+                      <input
+                        style={{ width: '250px' }}
+                        type="file"
+                        accept="image/*"
+                        onChange={onFileChange}
+                      />
+                      <Button onClick={(e) => onUpdate(e, item.key as string)}>
+                        수정하기
+                      </Button>
+                      <Button
+                        className="list-btn"
+                        onClick={(e) =>
+                          onDelete(
+                            e,
+                            item.key ? (item.key as string) : '',
+                            true
+                          )
+                        }>
+                        삭제하기
+                      </Button>
                     </div>
                   </div>
                 </div>
-              );
-            })
+              </div>
+            );
+          })
         ) : (
           <div>loading</div>
         )}

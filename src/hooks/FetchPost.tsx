@@ -25,7 +25,7 @@ const useFetchPost = () => {
           subject: item['title'],
           createdAt: item['createdAt'],
           type: item['type'],
-          id: index + 1,
+          id: item.index,
         };
       });
     // .filter((item: any) => item.type === type);

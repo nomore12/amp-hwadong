@@ -77,50 +77,15 @@ const NewPostCreate = ({ postType }: PropsType) => {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [filename, setFilename] = useState('');
 
-  const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
     const posts = await API.graphql({
       query: listPosts,
     });
     const { data } = { ...posts } as any;
-    console.log('data', data);
     setList(data.listPosts.items);
     setStartedAt(data.listPosts?.startedAt);
     setNextToken(data.listPosts.nextToken);
-    console.log(data);
-  };
-
-  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setType(e.target.value);
-  };
-
-  const onPostChange = (data: PostsCreateFormInputValues) => {
-    return data;
-  };
-
-  const onPostSuccess = (data: PostsCreateFormInputValues) => {
-    // data && fetchPost();
-    setTimeout(() => window.location.reload(), 500);
-    setTabIndex(1);
-  };
-
-  const onPostSubmit = (data: PostsCreateFormInputValues) => {
-    // const today = new Date();
-    // const year = today.getFullYear();
-    // const month = today.getMonth() + 1;
-    // const date = today.getDate();
-    // const awsDate = `${year}-${month >= 10 ? month : '0' + month}-${
-    //   date >= 10 ? date : '0' + date
-    // }`;
-    const awsDate = new Date().toISOString();
-
-    const result = {
-      ...data,
-      type: postType,
-      createdAt: awsDate,
-    } as PostsCreateFormInputValues;
-
-    return result;
+    console.log(data.listPosts.items);
   };
 
   async function createPost(data: PostsCreateFormInputValues) {
@@ -131,7 +96,6 @@ const NewPostCreate = ({ postType }: PropsType) => {
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectFile = e.target ? e.target?.files : null;
-    console.log('file', selectFile);
     const file = selectFile
       ? selectFile[0]
         ? selectFile[0]
@@ -154,17 +118,20 @@ const NewPostCreate = ({ postType }: PropsType) => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('key', filePath);
+    // 인덱스 생성
+    const currList = list
+      .filter((item: any) => item.type === postType.toUpperCase())
+      .sort((prev: any, next: any) => (prev.index > next.index ? 1 : -1));
+    // @ts-ignore
+    const nextIndex = currList[currList.length - 1].index + 1;
+
     const curr = new Date();
     const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
     const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
     const created = new Date(utc + KR_TIME_DIFF).toISOString();
-    console.log(created);
 
-    console.log(file);
     const uniqueKey = file ? getRandomKey() : '';
     setFilePath(uniqueKey);
-    console.log(uniqueKey);
     const newPost = await API.graphql({
       query: mutations.createPosts,
       variables: {
@@ -175,13 +142,13 @@ const NewPostCreate = ({ postType }: PropsType) => {
           type: postType === 'NOTICE' ? Type.NOTICE : Type.REPORT,
           filePath: uniqueKey,
           filename: postType === 'REPORT' && file ? filename : '',
+          index: nextIndex,
         },
       },
     });
 
     const { data } = newPost as any;
 
-    console.log(newPost);
     if (file) {
       const { key } = await Storage.put(uniqueKey, file, {
         contentType: 'image/*',

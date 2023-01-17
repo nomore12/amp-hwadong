@@ -15,6 +15,7 @@ import useSubjectReplacer from 'src/hooks/SubjectReplacer';
 import useMouseEventHook from 'src/hooks/UseMouseEventHook';
 import { API, Storage } from 'aws-amplify';
 import { listImagePosts } from '../../../graphql/queries';
+import { Text } from '@aws-amplify/ui-react';
 
 interface PropsType {
   type: 'WCO' | 'ETC';
@@ -156,11 +157,9 @@ const Gallery = ({ type }: PropsType) => {
   };
 
   const getList = async () => {
-    // setTimeout(() => setLoading(true), 3000);
     const { results } = await Storage.list(type === 'WCO' ? 'wco/' : 'etc/', {
       level: 'public',
     });
-    console.log('results', results);
     const keys: { url: string; key: string | undefined }[] = [];
     for await (const file of results) {
       const url = await Storage.get(file.key ? file.key : '');

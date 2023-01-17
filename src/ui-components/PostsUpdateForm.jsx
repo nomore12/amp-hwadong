@@ -37,12 +37,14 @@ export default function PostsUpdateForm(props) {
     createdAt: undefined,
     type: undefined,
     filename: undefined,
+    index: undefined,
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [desc, setDesc] = React.useState(initialValues.desc);
   const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
   const [type, setType] = React.useState(initialValues.type);
   const [filename, setFilename] = React.useState(initialValues.filename);
+  const [index, setIndex] = React.useState(initialValues.index);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = { ...initialValues, ...postsRecord };
@@ -51,6 +53,7 @@ export default function PostsUpdateForm(props) {
     setCreatedAt(cleanValues.createdAt);
     setType(cleanValues.type);
     setFilename(cleanValues.filename);
+    setIndex(cleanValues.index);
     setErrors({});
   };
   const [postsRecord, setPostsRecord] = React.useState(posts);
@@ -68,6 +71,7 @@ export default function PostsUpdateForm(props) {
     createdAt: [],
     type: [],
     filename: [],
+    index: [],
   };
   const runValidationTasks = async (fieldName, value) => {
     let validationResponse = validateField(value, validations[fieldName]);
@@ -109,6 +113,7 @@ export default function PostsUpdateForm(props) {
           createdAt,
           type,
           filename,
+          index,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -164,6 +169,7 @@ export default function PostsUpdateForm(props) {
               createdAt,
               type,
               filename,
+              index,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -192,6 +198,7 @@ export default function PostsUpdateForm(props) {
               createdAt,
               type,
               filename,
+              index,
             };
             const result = onChange(modelFields);
             value = result?.desc ?? value;
@@ -221,6 +228,7 @@ export default function PostsUpdateForm(props) {
               createdAt: value,
               type,
               filename,
+              index,
             };
             const result = onChange(modelFields);
             value = result?.createdAt ?? value;
@@ -249,6 +257,7 @@ export default function PostsUpdateForm(props) {
               createdAt,
               type: value,
               filename,
+              index,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -288,6 +297,7 @@ export default function PostsUpdateForm(props) {
               createdAt,
               type,
               filename: value,
+              index,
             };
             const result = onChange(modelFields);
             value = result?.filename ?? value;
@@ -301,6 +311,44 @@ export default function PostsUpdateForm(props) {
         errorMessage={errors.filename?.errorMessage}
         hasError={errors.filename?.hasError}
         {...getOverrideProps(overrides, "filename")}
+      ></TextField>
+      <TextField
+        label="Index"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        defaultValue={index}
+        onChange={(e) => {
+          let value = parseInt(e.target.value);
+          if (isNaN(value)) {
+            setErrors((errors) => ({
+              ...errors,
+              index: "Value must be a valid number",
+            }));
+            return;
+          }
+          if (onChange) {
+            const modelFields = {
+              title,
+              desc,
+              createdAt,
+              type,
+              filename,
+              index: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.index ?? value;
+          }
+          if (errors.index?.hasError) {
+            runValidationTasks("index", value);
+          }
+          setIndex(value);
+        }}
+        onBlur={() => runValidationTasks("index", index)}
+        errorMessage={errors.index?.errorMessage}
+        hasError={errors.index?.hasError}
+        {...getOverrideProps(overrides, "index")}
       ></TextField>
       <Flex
         justifyContent="space-between"

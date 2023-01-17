@@ -69,6 +69,7 @@ export const createPosts = /* GraphQL */ `
       type
       filePath
       filename
+      index
       updatedAt
       _version
       _deleted
@@ -89,6 +90,7 @@ export const updatePosts = /* GraphQL */ `
       type
       filePath
       filename
+      index
       updatedAt
       _version
       _deleted
@@ -109,6 +111,7 @@ export const deletePosts = /* GraphQL */ `
       type
       filePath
       filename
+      index
       updatedAt
       _version
       _deleted

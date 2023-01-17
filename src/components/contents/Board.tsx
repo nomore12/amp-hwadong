@@ -74,6 +74,7 @@ const Board = ({ boardType, lists }: PropsType) => {
 
   const currList =
     boardType === '공지사항' ? postInfo.currNotices : postInfo.currReports;
+  console.log(currList);
 
   useSubjectReplacer({
     ref: ref,

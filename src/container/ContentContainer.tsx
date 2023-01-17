@@ -13,6 +13,10 @@ const ContainerStyle = styled.div`
   padding: 200px 4rem 0 4rem;
   margin-bottom: 20rem;
 
+  &:last-child {
+    padding-bottom: 80px;
+  }
+
   @media only screen and (max-width: 1024px) {
     width: 100%;
     padding: 1rem;
