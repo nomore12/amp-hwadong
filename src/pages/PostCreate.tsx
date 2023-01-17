@@ -25,7 +25,6 @@ import PostsCreateForm, {
   PostsCreateFormValidationValues,
   ValidationResponse,
 } from '../ui-components/PostsCreateForm';
-import { format } from 'date-fns';
 
 interface PropsType {
   postType: string;
