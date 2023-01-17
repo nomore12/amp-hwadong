@@ -97,6 +97,7 @@ const GalleryCreate = ({ type }: PropsType) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDesc(e.target.value);
+    console.log('on change', list);
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,6 +156,7 @@ const GalleryCreate = ({ type }: PropsType) => {
   useEffect(() => {
     (async function fetCh() {
       await getList();
+      console.log(list);
     })();
   }, []);
 
