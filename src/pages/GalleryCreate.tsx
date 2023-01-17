@@ -195,9 +195,6 @@ const GalleryCreate = ({ type }: PropsType) => {
         {list ? (
           list
             .sort((item) => {
-              console.log(
-                item.key?.split('/')[item.key?.split('/').length - 2]
-              );
               return (item.key?.split('/')[item.key?.split('/').length - 2]
                 ? item.key?.split('/')[item.key?.split('/').length - 2]
                 : '0') >
