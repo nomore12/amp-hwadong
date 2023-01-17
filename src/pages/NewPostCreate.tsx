@@ -99,7 +99,6 @@ const NewPostCreate = ({ postType }: PropsType) => {
   };
 
   const onPostSuccess = (data: PostsCreateFormInputValues) => {
-    // alert('작성이 완료되었습니다.');
     // data && fetchPost();
     setTimeout(() => window.location.reload(), 500);
     setTabIndex(1);

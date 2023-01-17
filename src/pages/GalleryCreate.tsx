@@ -77,13 +77,10 @@ const GalleryCreate = ({ type }: PropsType) => {
   // const [urlList, setUrlList] = useState<string[]>([]);
   const urlList: string[] = [];
   const [refresh, setRefresh] = useState(false);
+  const [changedFile, setChangedFile] = useState<File | null>();
 
   // https://stackoverflow.com/questions/73074928/aws-amplify-upload-files-best-practices
-  const uploadImagePost = async (
-    file: File,
-    inputDesc: string,
-    inputCreatedAt: string
-  ) => {
+  const uploadImagePost = async (file: File, inputDesc: string) => {
     const { key } = await Storage.put(inputDesc, file, {
       contentType: 'image/*',
       level: 'public',
@@ -101,7 +98,6 @@ const GalleryCreate = ({ type }: PropsType) => {
       const url = await Storage.get(file.key ? file.key : '');
       keys.push({ url: url, key: key });
     }
-
     setList(keys);
   };
 
@@ -114,33 +110,56 @@ const GalleryCreate = ({ type }: PropsType) => {
     img && setImage(img);
   };
 
-  const onSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    date?: Date
+  ) => {
     e.preventDefault();
     if (image && desc) {
-      uploadImagePost(image, desc, createdAt);
+      const now = new Date();
+      await uploadImagePost(
+        image,
+        date ? date.toISOString() : now.toISOString() + '/' + desc
+      );
       setRefresh(!refresh);
+      setImage(undefined);
       // window.location.reload();'
       setTimeout(() => window.location.reload(), 500);
     } else {
-      alert('항목을 모두 작성해주세요.');
+      // alert('항목을 모두 작성해주세요.');
     }
   };
 
   const onDelete = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    key: string
+    key: string,
+    isModify: boolean
   ) => {
     //
     await Storage.remove(key);
-    setTimeout(() => window.location.reload(), 500);
+    isModify && setTimeout(() => window.location.reload(), 500);
   };
 
   const onUpdate = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     key: string
   ) => {
-    //
-    console.log(list);
+    const originDesc = key.split('/')[2];
+    const originDate = key.split('/')[1];
+    image && (await onDelete(e, key, true));
+
+    image &&
+      (await uploadImagePost(
+        image,
+        `${originDate}/${desc ? desc : originDesc}`
+      ));
+    setRefresh(!refresh);
+    setImage(undefined);
+    setTimeout(() => window.location.reload(), 500);
+  };
+
+  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChangedFile(e.target.files ? e.target.files[0] : null);
   };
 
   useEffect(() => {
@@ -165,46 +184,74 @@ const GalleryCreate = ({ type }: PropsType) => {
           />
         </div>
         <div>
+          설명은 한 줄(40자) 내로 입력 해주세요. 다른 이미지의 설명과 중복되면
+          안됩니다.
+        </div>
+        <div>
           <Button onClick={onSubmit}>게시하기</Button>
         </div>
       </form>
       <div className="imglist-wrapper">
         {list ? (
-          list.map((item, index) => {
-            return (
-              <div className="img-items" key={index}>
-                <div className="item-wrapper">
-                  <div className="img-wrapper">
-                    <img src={item.url} alt={item.key} />
-                  </div>
-                  <div className="item-content">
-                    <div>{item.key?.substring(4, item.key?.length)}</div>
-                    <input
-                      type="text"
-                      defaultValue={item.key?.substring(4, item.key?.length)}
-                    />
-                    <div className="btn-wrapper">
-                      <input
-                        style={{ width: '250px' }}
-                        type="file"
-                        accept="image/*"
-                      />
-                      <Button onClick={(e) => onUpdate(e, item.key as string)}>
-                        수정하기
-                      </Button>
-                      <Button
-                        className="list-btn"
-                        onClick={(e) =>
-                          onDelete(e, item.key ? (item.key as string) : '')
-                        }>
-                        삭제하기
-                      </Button>
+          list
+            .sort((item) => {
+              console.log(
+                item.key?.split('/')[item.key?.split('/').length - 2]
+              );
+              return (item.key?.split('/')[item.key?.split('/').length - 2]
+                ? item.key?.split('/')[item.key?.split('/').length - 2]
+                : '0') >
+                (item.key?.split('/')[item.key?.split('/').length - 2]
+                  ? item.key?.split('/')[item.key?.split('/').length - 2]
+                  : '0')
+                ? 1
+                : -1;
+            })
+            .map((item, index) => {
+              return (
+                <div className="img-items" key={index}>
+                  <div className="item-wrapper">
+                    <div className="img-wrapper">
+                      <img src={item.url} alt={item.key} />
+                    </div>
+                    <div className="item-content">
+                      {/*<div>{item.key?.substring(4, item.key?.length)}</div>*/}
+                      <div style={{ color: 'gray', fontSize: '12px' }}>
+                        내용 수정시 이미지와 글 내용 모두 등록해야 합니다.
+                      </div>
+                      <div>
+                        {item.key?.split('/')[item.key?.split('/').length - 1]}
+                      </div>
+                      <label htmlFor={item.key}>수정 내용: </label>
+                      <input id={item.key} type="text" onChange={onChange} />
+                      <div className="btn-wrapper">
+                        <input
+                          style={{ width: '250px' }}
+                          type="file"
+                          accept="image/*"
+                          onChange={onFileChange}
+                        />
+                        <Button
+                          onClick={(e) => onUpdate(e, item.key as string)}>
+                          수정하기
+                        </Button>
+                        <Button
+                          className="list-btn"
+                          onClick={(e) =>
+                            onDelete(
+                              e,
+                              item.key ? (item.key as string) : '',
+                              true
+                            )
+                          }>
+                          삭제하기
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
         ) : (
           <div>loading</div>
         )}

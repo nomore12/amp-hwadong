@@ -228,7 +228,9 @@ const Gallery = ({ type }: PropsType) => {
         </Carousel>
 
         {/*{list && loading && (*/}
-        <p style={{ marginTop: '2rem' }}>{desc.substring(4, desc.length)}</p>
+        <p style={{ marginTop: '2rem' }}>
+          {desc.split('/')[2] ? desc.split('/')[2] : 'loading...'}
+        </p>
         {/*)}*/}
       </div>
     </ContainerStyle>

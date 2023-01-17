@@ -39,6 +39,7 @@ const Router = () => {
         <Route path="/post/:id" element={<NewPostUpdate />}></Route>
         <Route path="/wco" element={<GalleryCreate type="WCO" />}></Route>
         <Route path="/etc" element={<GalleryCreate type="ETC" />}></Route>
+        <Route path="*" element={<Main />} />
       </Routes>
     </BrowserRouter>
   );
