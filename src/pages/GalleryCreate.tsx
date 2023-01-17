@@ -153,7 +153,7 @@ const GalleryCreate = ({ type }: PropsType) => {
         image,
         `${originDate}/${desc ? desc : originDesc}`
       ));
-    setRefresh(!refresh);
+    // setRefresh(!refresh);
     setImage(undefined);
     setTimeout(() => window.location.reload(), 500);
   };
@@ -164,7 +164,7 @@ const GalleryCreate = ({ type }: PropsType) => {
 
   useEffect(() => {
     getList();
-  }, [refresh]);
+  }, []);
 
   return (
     <ContainerStyle>
