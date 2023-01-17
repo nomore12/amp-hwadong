@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation, Storage } from 'aws-amplify';
-import * as mutation from '../graphql/mutations';
-import { listImagePosts, listPosts } from '../graphql/queries';
-import { ImagePostCreateFormInputValues } from '../ui-components/ImagePostCreateForm';
+import { Storage } from 'aws-amplify';
 import styled from 'styled-components';
 import { Button } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
@@ -71,13 +68,10 @@ const GalleryCreate = ({ type }: PropsType) => {
   const [list, setList] = useState<{ url: string; key: string | undefined }[]>(
     []
   );
-  const [createdAt, setCreatedAt] = useState('');
   const [desc, setDesc] = useState('');
   const [image, setImage] = useState<File>();
-  // const [urlList, setUrlList] = useState<string[]>([]);
   const urlList: string[] = [];
   const [refresh, setRefresh] = useState(false);
-  const [changedFile, setChangedFile] = useState<File | null>();
 
   // https://stackoverflow.com/questions/73074928/aws-amplify-upload-files-best-practices
   const uploadImagePost = async (file: File, inputDesc: string) => {
@@ -158,12 +152,10 @@ const GalleryCreate = ({ type }: PropsType) => {
     setTimeout(() => window.location.reload(), 500);
   };
 
-  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChangedFile(e.target.files ? e.target.files[0] : null);
-  };
-
   useEffect(() => {
-    getList();
+    (async function fetCh() {
+      await getList();
+    })();
   }, []);
 
   return (
