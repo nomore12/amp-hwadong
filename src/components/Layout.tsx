@@ -166,6 +166,13 @@ const ContainerStyle = styled(motion.div)<{ color: string }>`
     @media screen and (max-width: 1024px) {
       display: none;
     }
+
+    .content-container-wrapper {
+      padding-bottom: 80px;
+      @media screen and (max-width: 1024px) {
+        padding-bottom: 0;
+      }
+    }
   }
 
   //.hong {
@@ -290,7 +297,7 @@ const Layout = () => {
           <Route
             path="/*"
             element={
-              <div>
+              <div className="content-container-wrapper">
                 <div className="mobile-height"></div>
                 <p className="mobile-subject">설립목적</p>
                 <section id="설립목적">

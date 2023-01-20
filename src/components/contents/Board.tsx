@@ -51,6 +51,10 @@ const ContainerStyle = styled.ul`
   max-width: 640px;
   margin-bottom: 1rem;
   border-bottom: 1px solid rgba(39, 39, 42, 0.6);
+
+  .bottom {
+    min-height: 240px;
+  }
 `;
 
 const Board = ({ boardType, lists }: PropsType) => {
@@ -74,7 +78,6 @@ const Board = ({ boardType, lists }: PropsType) => {
 
   const currList =
     boardType === '공지사항' ? postInfo.currNotices : postInfo.currReports;
-  console.log(currList);
 
   useSubjectReplacer({
     ref: ref,
@@ -116,6 +119,7 @@ const Board = ({ boardType, lists }: PropsType) => {
               />
             );
           })}
+        <div className={boardType === '연간사업보고' ? 'bottom' : ''}></div>
       </ContainerStyle>
       <PaginationStyle
         onChange={onPaginationChange}
