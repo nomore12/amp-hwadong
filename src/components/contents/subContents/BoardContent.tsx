@@ -153,7 +153,7 @@ const BoardContent = () => {
       ) : (
         <>
           <ListItem
-            index={1}
+            index={contentData.index}
             subject={contentData.title}
             createdAt={contentData.createdAt}
             type={contentData.type}

@@ -22,6 +22,7 @@ const ContainerStyle = styled.div`
 
     p {
       color: rgba(39, 39, 42, 0.8);
+      font-size: 0.9rem;
     }
   }
 

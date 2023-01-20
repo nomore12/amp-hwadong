@@ -14,7 +14,7 @@ const ContainerStyle = styled.div`
   margin-bottom: 20rem;
 
   &:last-child {
-    padding-bottom: 80px;
+    padding-bottom: 120px;
   }
 
   @media only screen and (max-width: 1024px) {
