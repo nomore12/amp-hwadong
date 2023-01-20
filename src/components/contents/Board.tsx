@@ -51,9 +51,11 @@ const ContainerStyle = styled.ul`
   max-width: 640px;
   margin-bottom: 1rem;
   border-bottom: 1px solid rgba(39, 39, 42, 0.6);
+`;
 
+const BottomPadding = styled.div`
   .bottom {
-    min-height: 240px;
+    main-height: 360px;
   }
 `;
 
@@ -119,7 +121,6 @@ const Board = ({ boardType, lists }: PropsType) => {
               />
             );
           })}
-        <div className={boardType === '연간사업보고' ? 'bottom' : ''}></div>
       </ContainerStyle>
       <PaginationStyle
         onChange={onPaginationChange}
@@ -141,6 +142,19 @@ const Board = ({ boardType, lists }: PropsType) => {
             : postInfo.reports.length / 10
         )}
       />
+      <BottomPadding>
+        {boardType === '연간사업보고' && (
+          <>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+          </>
+        )}
+      </BottomPadding>
     </div>
   );
 };
