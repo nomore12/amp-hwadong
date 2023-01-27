@@ -57,7 +57,7 @@ const Contact = () => {
           <span className="contact__inner--item">02. 751. 9894</span>
         </p>
         <a
-          href="mailto:nightwing@naver.com"
+          href="mailto:hwadongcf@naver.com"
           className="contact__inner--content">
           <span className="contact__inner--thin">email | </span>
           <span

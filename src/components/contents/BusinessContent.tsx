@@ -38,6 +38,7 @@ const ContainerStyle = styled.div`
       @media screen and (max-width: 720px) {
         align-items: flex-start;
         text-align: start;
+        width: 100%;
       }
     }
   }

@@ -10,7 +10,7 @@ const ContainerStyle = styled.div`
   justify-content: flex-end;
   width: 768px;
   text-align: end;
-  padding: 200px 4rem 0 4rem;
+  padding: 230px 4rem 0 4rem;
   margin-bottom: 20rem;
 
   &:last-child {
