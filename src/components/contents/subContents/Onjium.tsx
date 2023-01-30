@@ -9,6 +9,7 @@ import imgLink1 from 'src/components/assets/images/onjium01.png';
 import imgLink2 from 'src/components/assets/images/onjium02.png';
 import imgLink3 from 'src/components/assets/images/onjium03.jpeg';
 import horizImage from 'src/components/assets/images/onjium.png';
+import { isMobile } from 'react-device-detect';
 
 const ContainerStyle = styled.div`
   display: flex;
@@ -74,6 +75,7 @@ const ContainerStyle = styled.div`
 const OnJium = () => {
   const dispatch = useAppDispatch();
   const { onMouseEnter, onMouseLeave, navigateToPage } = useMouseEventHook();
+  const mobileView = isMobile;
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -100,16 +102,25 @@ const OnJium = () => {
   return (
     <ContainerStyle>
       <div className="onjium-desc">
-        <p>
-          {'"온 | 모두 온전하게", "지음 | 만들다, 이어가다, 뜻이 통하다"라는'}
-        </p>
-        <p>의미를 가지고 지난 2013년 6월 문을 연 전통문화연구소로,</p>
-        <p>
-          의/식/주 세 부분의 21세기형 장인 육성과 한국 전통 문화를 창조적으로
-        </p>
-        <p>
-          계승하여 한국 문화를 알리는 대표 브랜드 생산을 목표로 하고 있습니다.
-        </p>
+        {mobileView ? (
+          <p style={{ lineHeight: '2rem' }}>
+            {
+              '"온 | 모두 온전하게", "지음 | 만들다, 이어가다, 뜻이 통하다"라는 의미를 가지고 지난 2013년 6월 문을 연 전통문화연구소로, 의/식/주 세 부분의 21세기형 장인 육성과 한국 전통 문화를 창조적으로 계승하여 한국 문화를 알리는 대표 브랜드 생산을 목표로 하고 있습니다.'
+            }
+          </p>
+        ) : (
+          <>
+            <p>
+              {
+                '"온 | 모두 온전하게", "지음 | 만들다, 이어가다, 뜻이 통하다"라는'
+              }
+            </p>
+            <p>의미를 가지고 지난 2013년 6월 문을 연 전통문화연구소로,</p>
+            <p>의/식/주 세 부분의 21세기형 장인 육성과 한국 전통 문화를</p>
+            <p>창조적으로 계승하여 한국 문화를 알리는</p>
+            <p>대표 브랜드 생산을 목표로 하고 있습니다.</p>
+          </>
+        )}
       </div>
       <a
         className="onjium-link"
@@ -136,9 +147,9 @@ const OnJium = () => {
         <div className="onjium-content-item">
           <p>맛공방</p>
           <p className="content-item__desc">
-            고조리서 연구 및 한식 현대와 연구, 전통한식 및 조리이론 교육,
+            고조리서 연구 및 한식 현대와 연구, 전통한식 및
             <br />
-            한식 레시피 및 조리 방법 소개 등
+            조리이론 교육, 한식 레시피 및 조리 방법 소개 등
           </p>
         </div>
         <div className="onjium-content-item">

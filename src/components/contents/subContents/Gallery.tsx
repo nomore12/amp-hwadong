@@ -50,6 +50,9 @@ const ContainerStyle = styled.div`
 
     .carousel-container {
       width: 640px !important;
+
+      @media screen and (max-width: 768px) {
+      }
     }
 
     .control-arrow,
@@ -108,7 +111,9 @@ const ContainerStyle = styled.div`
   }
 
   .carousel-img-slide {
-    height: 420px;
+    @media screen and (min-width: 1080px) {
+      height: 420px;
+    }
   }
 
   //img {
@@ -183,7 +188,7 @@ const Gallery = ({ type }: PropsType) => {
       </div>
       <div className={`carousel-container carousel-item`}>
         <Carousel
-          style={{ height: '420px' }}
+          // style={{ height: '420px' }}
           className={`carousel-item`}
           autoplay
           autoplayInterval={3000}

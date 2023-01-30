@@ -10,6 +10,7 @@ interface PropsType {}
 const ContainerStyle = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   @media screen and (max-width: 720px) {
     align-items: flex-start;
@@ -34,6 +35,7 @@ const ContainerStyle = styled.div`
 
     @media screen and (max-width: 720px) {
       text-align: start;
+      width: 100%;
     }
   }
 `;
@@ -82,9 +84,8 @@ const FoundationActivity = () => {
         }}>
         홍진기 창조인상
       </p>
-
       {mobileView ? (
-        <div>
+        <>
           <p className="activity-item__desc">
             ‘혁신적인 창조력의 가치를 믿고 지원하다’
           </p>
@@ -95,9 +96,9 @@ const FoundationActivity = () => {
             과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬
           </p>
           <p className="activity-item__desc">수상자를 선정합니다.</p>
-        </div>
+        </>
       ) : (
-        <div>
+        <>
           <p className="activity-item__desc">
             ‘혁신적인 창조력의 가치를 믿고 지원하다’
           </p>
@@ -108,14 +109,8 @@ const FoundationActivity = () => {
             과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬 수상자를
             선정합니다.
           </p>
-        </div>
+        </>
       )}
-      {/*<div>*/}
-      {/*  <p className="activity-item__desc">*/}
-      {/*    과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬 수상자를*/}
-      {/*    선정합니다.*/}
-      {/*  </p>*/}
-      {/*</div>*/}
     </ContainerStyle>
   );
 };
