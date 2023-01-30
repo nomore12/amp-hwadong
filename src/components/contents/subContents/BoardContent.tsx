@@ -95,18 +95,14 @@ const BoardContent = () => {
     setLoading(false);
     setType(data.getPosts.type);
     setFilename(data.getPosts.filename);
-    console.log('data', data.getPosts);
     const fileKey = `${data.getPosts.type?.toLowerCase()}/${
       data.getPosts.filePath
     }`;
 
-    console.log('file key', fileKey);
     const url = await Storage.get(fileKey);
-    console.log(fileKey);
     type === 'REPORT' && setPdfKey(fileKey);
-    console.log('url', url);
     const key = fileKey.split('/');
-    console.log(url, key);
+
     if (key[1] === '' || key[1] === 'null') setImgUrl('');
     else setImgUrl(url);
   };
@@ -117,7 +113,6 @@ const BoardContent = () => {
       contentType: 'application/pdf',
     });
     saveAs(result.Body as Blob, filename);
-    console.log(result);
   };
 
   useEffect(() => {
@@ -133,7 +128,7 @@ const BoardContent = () => {
     );
 
     window.addEventListener('focus', eventListener);
-    console.log(imgUrl);
+
     return () => {
       dispatch(changeCurr('main'));
       dispatch(changeText(''));

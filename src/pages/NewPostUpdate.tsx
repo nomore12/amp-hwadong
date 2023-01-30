@@ -60,7 +60,6 @@ const NewPostUpdate = () => {
 
   async function getPost() {
     const { results } = await Storage.list('notice/', { level: 'public' });
-    console.log('results: ', results);
 
     const post = await API.graphql({
       query: getPosts,
@@ -84,13 +83,9 @@ const NewPostUpdate = () => {
     setVersion(_version);
     setPostFilePath(filePath);
     setFilename(fileName);
-    console.log('filepath', filePath);
 
     const fileKey = `${postType.toLowerCase()}/${filePath}`;
     const url = await Storage.get(fileKey);
-    // console.log(url, fileKey);
-    console.log(fileKey, url);
-    console.log('post', data.getPosts);
     const key = fileKey.split('/')[1];
     key !== '' ? setImg(url) : setImg('');
   }
@@ -135,8 +130,6 @@ const NewPostUpdate = () => {
   };
 
   const onDelete = async () => {
-    //
-    console.log(params.id, version);
     try {
       const deletedTodo = await API.graphql({
         query: deletePosts,
@@ -150,7 +143,6 @@ const NewPostUpdate = () => {
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectFile = e.target ? e.target?.files : null;
-    console.log('file', selectFile);
     const file = selectFile
       ? selectFile[0]
         ? selectFile[0]

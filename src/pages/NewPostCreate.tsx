@@ -85,7 +85,6 @@ const NewPostCreate = ({ postType }: PropsType) => {
     setList(data.listPosts.items);
     setStartedAt(data.listPosts?.startedAt);
     setNextToken(data.listPosts.nextToken);
-    console.log(data.listPosts.items);
   };
 
   async function createPost(data: PostsCreateFormInputValues) {

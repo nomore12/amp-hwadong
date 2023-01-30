@@ -95,10 +95,6 @@ const Board = ({ boardType, lists }: PropsType) => {
     );
   };
 
-  // useEffect(() => {
-  //   console.log('');
-  // }, [currPage]);
-
   return (
     <div
       style={{
