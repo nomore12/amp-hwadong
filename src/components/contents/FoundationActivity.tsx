@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import useSubjectReplacer from '../../hooks/SubjectReplacer';
 import useMouseEventHook from '../../hooks/UseMouseEventHook';
 import { changeCurr, changeSubject, changeText } from '../../store/Slice';
+import { isMobile } from 'react-device-detect';
 
 interface PropsType {}
 
@@ -42,6 +43,7 @@ const FoundationActivity = () => {
   useSubjectReplacer({ ref: ref, subject: '재단활동소개' });
   const { onMouseEnter, onMouseLeave, navigateToPage } = useMouseEventHook();
   const [currPosition, setCurrPosition] = useState(0);
+  const mobileView = isMobile;
 
   return (
     <ContainerStyle className="activity" ref={ref}>
@@ -80,16 +82,40 @@ const FoundationActivity = () => {
         }}>
         홍진기 창조인상
       </p>
-      <p className="activity-item__desc">
-        ‘혁신적인 창조력의 가치를 믿고 지원하다’
-      </p>
-      <p className="activity-item__desc">
-        고(故) 유민 홍진기 전 중앙일보 회장의 유지를 받들어,
-      </p>
-      <p className="activity-item__desc">
-        과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬 수상자를
-        선정합니다.
-      </p>
+
+      {mobileView ? (
+        <div>
+          <p className="activity-item__desc">
+            ‘혁신적인 창조력의 가치를 믿고 지원하다’
+          </p>
+          <p className="activity-item__desc">
+            고(故) 유민 홍진기 전 중앙일보 회장의 유지를 받들어,
+          </p>
+          <p className="activity-item__desc">
+            과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬
+          </p>
+          <p className="activity-item__desc">수상자를 선정합니다.</p>
+        </div>
+      ) : (
+        <div>
+          <p className="activity-item__desc">
+            ‘혁신적인 창조력의 가치를 믿고 지원하다’
+          </p>
+          <p className="activity-item__desc">
+            고(故) 유민 홍진기 전 중앙일보 회장의 유지를 받들어,
+          </p>
+          <p className="activity-item__desc">
+            과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬 수상자를
+            선정합니다.
+          </p>
+        </div>
+      )}
+      {/*<div>*/}
+      {/*  <p className="activity-item__desc">*/}
+      {/*    과학기술/사회/ 문화예술 세 분야의 창의적인 업적을 이룬 수상자를*/}
+      {/*    선정합니다.*/}
+      {/*  </p>*/}
+      {/*</div>*/}
     </ContainerStyle>
   );
 };
