@@ -74,6 +74,7 @@ const BoardContent = () => {
   const [imgUrl, setImgUrl] = useState('');
   const [pdfKey, setPdfKey] = useState('');
   const [filename, setFilename] = useState('');
+  const [tmpUrl, setTmpUrl] = useState('');
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -108,16 +109,42 @@ const BoardContent = () => {
   };
 
   const downloadFile = async (key: string) => {
-    const result = await Storage.get(key, {
+    const pdfKey = location.pathname.includes('2021')
+      ? 'report/화동_21년_공시_재공시_220928.pdf'
+      : 'report/화동_22년_공시(신고).pdf';
+
+    const file = await Storage.get(pdfKey, {
+      level: 'public',
       download: true,
       contentType: 'application/pdf',
     });
-    saveAs(result.Body as Blob, filename);
+
+    const result = await Storage.get(pdfKey, {
+      download: true,
+      contentType: 'application/pdf',
+    });
+    // saveAs(result.Body as Blob, filename);
+    saveAs(file.Body as Blob, 'download');
   };
+
+  const currList = [
+    {
+      id: 1,
+      subject: '2021년 귀속 결산서류 등의 공시 (파일: 화동_21년_공시_재공시)',
+      createdAt: '2023-05-02',
+      uuid: '2021',
+    },
+    {
+      id: 2,
+      subject: '2022년 귀속 결산서류 등의 공시 (파일: 화동_22년_공시(신고))',
+      createdAt: '2023-05-02',
+      uuid: '2022',
+    },
+  ];
 
   useEffect(() => {
     animateScroll.scrollToTop();
-    fetchPost();
+    // fetchPost();
 
     dispatch(changeCurr('archive'));
     dispatch(changeText('back'));
@@ -143,38 +170,43 @@ const BoardContent = () => {
 
   return (
     <ContainerStyle>
-      {loading ? (
-        <div>loading...</div>
-      ) : (
-        <>
-          <ListItem
-            index={contentData.index}
-            subject={contentData.title}
-            createdAt={contentData.createdAt}
-            type={contentData.type}
-            uuid={contentData.id}
-          />
-          {type === 'NOTICE' ? (
-            <div>{imgUrl && <img className="notice-img" src={imgUrl} />}</div>
-          ) : (
-            imgUrl && (
-              <div
-                className="link"
-                onMouseEnter={(e) => onMouseEnter(e, ' ')}
-                onMouseLeave={(e) => onMouseLeave(e, 'back')}>
-                <button
-                  className="link pdf-download"
-                  onClick={async () => {
-                    await downloadFile(pdfKey);
-                  }}>
-                  파일 다운로드
-                </button>
-              </div>
-            )
-          )}
-          <p className="board-content-area">{contentData.desc}</p>
-        </>
-      )}
+      {/*{loading ? (*/}
+      {/*  <div>loading...</div>*/}
+      {/*) : (*/}
+      <>
+        <ListItem
+          index={currList[0].id}
+          subject={currList[0].subject}
+          createdAt={currList[0].createdAt}
+          type={'연간사업보고'}
+          uuid={currList[0].uuid}
+        />
+        {/*{type === 'NOTICE' ? (*/}
+        {/*  <div>{imgUrl && <img className="notice-img" src={imgUrl} />}</div>*/}
+        {/*) : (*/}
+        {/*  imgUrl && (*/}
+        <div
+          className="link"
+          onMouseEnter={(e) => onMouseEnter(e, ' ')}
+          onMouseLeave={(e) => onMouseLeave(e, 'back')}>
+          {/*<a href={tmpUrl}>download</a>*/}
+          <button
+            className="link pdf-download"
+            onClick={async () => {
+              await downloadFile(pdfKey);
+            }}>
+            파일 다운로드
+          </button>
+        </div>
+        {/*)}*/}
+        <p className="board-content-area">
+          {location.pathname.includes('2021')
+            ? '본 재단 홈페이지 리뉴얼로 인해 재게재합니다.'
+            : ''}
+        </p>
+        {/*<p className="board-content-area">{'dddd'}</p>*/}
+      </>
+      {/*)}*/}
     </ContainerStyle>
   );
 };

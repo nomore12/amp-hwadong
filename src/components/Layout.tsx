@@ -18,6 +18,7 @@ import Establishment from './contents/Establishment';
 import Contact from './contents/Contact';
 import { listDummy } from 'src/dummy';
 import Board from './contents/Board';
+import ReportBoard from './contents/ReportBoard';
 import History from './contents/History';
 import BusinessContent from './contents/BusinessContent';
 import FoundationActivity from './contents/FoundationActivity';
@@ -332,7 +333,12 @@ const Layout = () => {
                 <p className="mobile-subject">연간 사업보고</p>
                 <section id="연간사업보고">
                   <ContentContainer>
-                    {<Board boardType="연간사업보고" lists={reportList} />}
+                    {
+                      <ReportBoard
+                        boardType="연간사업보고"
+                        lists={reportList}
+                      />
+                    }
                   </ContentContainer>
                 </section>
               </div>
