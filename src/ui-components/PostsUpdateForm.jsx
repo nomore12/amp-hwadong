@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { Posts } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Button,
   Flex,
@@ -17,11 +14,14 @@ import {
   TextAreaField,
   TextField,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { Posts } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 export default function PostsUpdateForm(props) {
   const {
-    id,
-    posts,
+    id: idProp,
+    posts: postsModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -32,12 +32,12 @@ export default function PostsUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    title: undefined,
-    desc: undefined,
-    createdAt: undefined,
-    type: undefined,
-    filename: undefined,
-    index: undefined,
+    title: "",
+    desc: "",
+    createdAt: "",
+    type: "",
+    filename: "",
+    index: "",
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [desc, setDesc] = React.useState(initialValues.desc);
@@ -47,7 +47,9 @@ export default function PostsUpdateForm(props) {
   const [index, setIndex] = React.useState(initialValues.index);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = { ...initialValues, ...postsRecord };
+    const cleanValues = postsRecord
+      ? { ...initialValues, ...postsRecord }
+      : initialValues;
     setTitle(cleanValues.title);
     setDesc(cleanValues.desc);
     setCreatedAt(cleanValues.createdAt);
@@ -56,14 +58,16 @@ export default function PostsUpdateForm(props) {
     setIndex(cleanValues.index);
     setErrors({});
   };
-  const [postsRecord, setPostsRecord] = React.useState(posts);
+  const [postsRecord, setPostsRecord] = React.useState(postsModelProp);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = id ? await DataStore.query(Posts, id) : posts;
+      const record = idProp
+        ? await DataStore.query(Posts, idProp)
+        : postsModelProp;
       setPostsRecord(record);
     };
     queryData();
-  }, [id, posts]);
+  }, [idProp, postsModelProp]);
   React.useEffect(resetStateValues, [postsRecord]);
   const validations = {
     title: [],
@@ -73,7 +77,15 @@ export default function PostsUpdateForm(props) {
     filename: [],
     index: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -91,7 +103,7 @@ export default function PostsUpdateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hour12: false,
+      hourCycle: "h23",
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -138,6 +150,11 @@ export default function PostsUpdateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(
             Posts.copyOf(postsRecord, (updated) => {
               Object.assign(updated, modelFields);
@@ -152,14 +169,14 @@ export default function PostsUpdateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "PostsUpdateForm")}
+      {...rest}
     >
       <TextField
         label="제목"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={title}
+        value={title}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -188,7 +205,7 @@ export default function PostsUpdateForm(props) {
         label="게시글"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={desc}
+        value={desc}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -218,9 +235,10 @@ export default function PostsUpdateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="date"
-        defaultValue={createdAt && convertToLocal(new Date(createdAt))}
+        value={createdAt && convertToLocal(new Date(createdAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               title,
@@ -236,7 +254,7 @@ export default function PostsUpdateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(new Date(value).toISOString());
+          setCreatedAt(value);
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}
@@ -287,7 +305,7 @@ export default function PostsUpdateForm(props) {
         label="Filename"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={filename}
+        value={filename}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -318,16 +336,11 @@ export default function PostsUpdateForm(props) {
         isReadOnly={false}
         type="number"
         step="any"
-        defaultValue={index}
+        value={index}
         onChange={(e) => {
-          let value = parseInt(e.target.value);
-          if (isNaN(value)) {
-            setErrors((errors) => ({
-              ...errors,
-              index: "Value must be a valid number",
-            }));
-            return;
-          }
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
               title,
@@ -370,7 +383,10 @@ export default function PostsUpdateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || postsModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, TextAreaFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -18,10 +18,10 @@ export declare type NewForm1InputValues = {
 export declare type NewForm1ValidationValues = {
     Field0?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type NewForm1OverridesProps = {
-    NewForm1Grid?: FormProps<GridProps>;
-    Field0?: FormProps<TextAreaFieldProps>;
+    NewForm1Grid?: PrimitiveOverrideProps<GridProps>;
+    Field0?: PrimitiveOverrideProps<TextAreaFieldProps>;
 } & EscapeHatchProps;
 export declare type NewForm1Props = React.PropsWithChildren<{
     overrides?: NewForm1OverridesProps | undefined | null;

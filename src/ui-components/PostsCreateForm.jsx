@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { Posts } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Button,
   Flex,
@@ -17,6 +14,9 @@ import {
   TextAreaField,
   TextField,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { Posts } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 export default function PostsCreateForm(props) {
   const {
@@ -24,18 +24,17 @@ export default function PostsCreateForm(props) {
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    title: undefined,
-    desc: undefined,
-    createdAt: undefined,
-    type: undefined,
-    filename: undefined,
+    title: "",
+    desc: "",
+    createdAt: "",
+    type: "",
+    filename: "",
   };
   const [title, setTitle] = React.useState(initialValues.title);
   const [desc, setDesc] = React.useState(initialValues.desc);
@@ -58,7 +57,15 @@ export default function PostsCreateForm(props) {
     type: [],
     filename: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -66,6 +73,23 @@ export default function PostsCreateForm(props) {
     }
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
+  };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   return (
     <Grid
@@ -105,6 +129,11 @@ export default function PostsCreateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(new Posts(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
@@ -118,13 +147,14 @@ export default function PostsCreateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "PostsCreateForm")}
+      {...rest}
     >
       <TextField
         label="제목"
         isRequired={true}
         isReadOnly={false}
+        value={title}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -180,8 +210,10 @@ export default function PostsCreateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="date"
+        value={createdAt && convertToLocal(new Date(createdAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               title,
@@ -196,7 +228,7 @@ export default function PostsCreateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(new Date(value).toISOString());
+          setCreatedAt(value);
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}
@@ -246,6 +278,7 @@ export default function PostsCreateForm(props) {
         label="Filename"
         isRequired={false}
         isReadOnly={false}
+        value={filename}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -276,7 +309,10 @@ export default function PostsCreateForm(props) {
         <Button
           children="Clear"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
           {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex

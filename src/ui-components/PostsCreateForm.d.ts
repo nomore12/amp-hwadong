@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, SelectFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -26,14 +26,14 @@ export declare type PostsCreateFormValidationValues = {
     type?: ValidationFunction<string>;
     filename?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PostsCreateFormOverridesProps = {
-    PostsCreateFormGrid?: FormProps<GridProps>;
-    title?: FormProps<TextFieldProps>;
-    desc?: FormProps<TextAreaFieldProps>;
-    createdAt?: FormProps<TextFieldProps>;
-    type?: FormProps<SelectFieldProps>;
-    filename?: FormProps<TextFieldProps>;
+    PostsCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    title?: PrimitiveOverrideProps<TextFieldProps>;
+    desc?: PrimitiveOverrideProps<TextAreaFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
+    type?: PrimitiveOverrideProps<SelectFieldProps>;
+    filename?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type PostsCreateFormProps = React.PropsWithChildren<{
     overrides?: PostsCreateFormOverridesProps | undefined | null;
@@ -42,7 +42,6 @@ export declare type PostsCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: PostsCreateFormInputValues) => PostsCreateFormInputValues;
     onSuccess?: (fields: PostsCreateFormInputValues) => void;
     onError?: (fields: PostsCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: PostsCreateFormInputValues) => PostsCreateFormInputValues;
     onValidate?: PostsCreateFormValidationValues;
 } & React.CSSProperties>;

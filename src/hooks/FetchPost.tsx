@@ -12,24 +12,28 @@ const useFetchPost = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const paginationProps = usePagination({ totalPages: 8 });
   const fetchPost = async () => {
-    const posts = await API.graphql(graphqlOperation(listPosts));
-    const { data } = { ...posts } as any;
-    const lists = data.listPosts.items
-      .filter((item: any) => !item['_deleted'])
-      .sort((prev: any, curr: any) =>
-        prev.createdAt < curr.createdAt ? 1 : -1
-      )
-      .map((item: any, index: any) => {
-        return {
-          uuid: item['id'],
-          subject: item['title'],
-          createdAt: item['createdAt'],
-          type: item['type'],
-          id: item.index,
-        };
-      });
-    // .filter((item: any) => item.type === type);
-    setList(lists);
+    try {
+      const posts = await API.graphql(graphqlOperation(listPosts));
+      const { data } = { ...posts } as any;
+      const lists = data.listPosts.items
+        .filter((item: any) => !item['_deleted'])
+        .sort((prev: any, curr: any) =>
+          prev.createdAt < curr.createdAt ? 1 : -1
+        )
+        .map((item: any, index: any) => {
+          return {
+            uuid: item['id'],
+            subject: item['title'],
+            createdAt: item['createdAt'],
+            type: item['type'],
+            id: item.index,
+          };
+        });
+      // .filter((item: any) => item.type === type);
+      setList(lists);
+    } catch (e) {
+      console.log('error', e);
+    }
   };
 
   useEffect(() => {

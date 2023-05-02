@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { ImagePost } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Button,
   Flex,
@@ -16,25 +13,27 @@ import {
   SelectField,
   TextField,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { ImagePost } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 export default function ImagePostUpdateForm(props) {
   const {
-    id,
-    imagePost,
+    id: idProp,
+    imagePost: imagePostModelProp,
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    desc: undefined,
-    imgKey: undefined,
-    createdAt: undefined,
-    type: undefined,
+    desc: "",
+    imgKey: "",
+    createdAt: "",
+    type: "",
   };
   const [desc, setDesc] = React.useState(initialValues.desc);
   const [imgKey, setImgKey] = React.useState(initialValues.imgKey);
@@ -42,21 +41,26 @@ export default function ImagePostUpdateForm(props) {
   const [type, setType] = React.useState(initialValues.type);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = { ...initialValues, ...imagePostRecord };
+    const cleanValues = imagePostRecord
+      ? { ...initialValues, ...imagePostRecord }
+      : initialValues;
     setDesc(cleanValues.desc);
     setImgKey(cleanValues.imgKey);
     setCreatedAt(cleanValues.createdAt);
     setType(cleanValues.type);
     setErrors({});
   };
-  const [imagePostRecord, setImagePostRecord] = React.useState(imagePost);
+  const [imagePostRecord, setImagePostRecord] =
+    React.useState(imagePostModelProp);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = id ? await DataStore.query(ImagePost, id) : imagePost;
+      const record = idProp
+        ? await DataStore.query(ImagePost, idProp)
+        : imagePostModelProp;
       setImagePostRecord(record);
     };
     queryData();
-  }, [id, imagePost]);
+  }, [idProp, imagePostModelProp]);
   React.useEffect(resetStateValues, [imagePostRecord]);
   const validations = {
     desc: [],
@@ -64,7 +68,15 @@ export default function ImagePostUpdateForm(props) {
     createdAt: [],
     type: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -82,7 +94,7 @@ export default function ImagePostUpdateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hour12: false,
+      hourCycle: "h23",
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -127,6 +139,11 @@ export default function ImagePostUpdateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(
             ImagePost.copyOf(imagePostRecord, (updated) => {
               Object.assign(updated, modelFields);
@@ -141,14 +158,14 @@ export default function ImagePostUpdateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "ImagePostUpdateForm")}
+      {...rest}
     >
       <TextField
         label="Desc"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={desc}
+        value={desc}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -175,7 +192,7 @@ export default function ImagePostUpdateForm(props) {
         label="Img key"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={imgKey}
+        value={imgKey}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -203,9 +220,10 @@ export default function ImagePostUpdateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="datetime-local"
-        defaultValue={createdAt && convertToLocal(new Date(createdAt))}
+        value={createdAt && convertToLocal(new Date(createdAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               desc,
@@ -219,7 +237,7 @@ export default function ImagePostUpdateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(new Date(value).toISOString());
+          setCreatedAt(value);
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}
@@ -271,7 +289,11 @@ export default function ImagePostUpdateForm(props) {
         <Button
           children="Reset"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
+          isDisabled={!(idProp || imagePostModelProp)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -279,18 +301,13 @@ export default function ImagePostUpdateForm(props) {
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
           <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
-          <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || imagePostModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

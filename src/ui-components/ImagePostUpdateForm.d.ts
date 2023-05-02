@@ -5,9 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { ImagePost } from "../models";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
+import { ImagePost } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -25,13 +25,13 @@ export declare type ImagePostUpdateFormValidationValues = {
     createdAt?: ValidationFunction<string>;
     type?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ImagePostUpdateFormOverridesProps = {
-    ImagePostUpdateFormGrid?: FormProps<GridProps>;
-    desc?: FormProps<TextFieldProps>;
-    imgKey?: FormProps<TextFieldProps>;
-    createdAt?: FormProps<TextFieldProps>;
-    type?: FormProps<SelectFieldProps>;
+    ImagePostUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    desc?: PrimitiveOverrideProps<TextFieldProps>;
+    imgKey?: PrimitiveOverrideProps<TextFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
+    type?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type ImagePostUpdateFormProps = React.PropsWithChildren<{
     overrides?: ImagePostUpdateFormOverridesProps | undefined | null;
@@ -41,7 +41,6 @@ export declare type ImagePostUpdateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: ImagePostUpdateFormInputValues) => ImagePostUpdateFormInputValues;
     onSuccess?: (fields: ImagePostUpdateFormInputValues) => void;
     onError?: (fields: ImagePostUpdateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: ImagePostUpdateFormInputValues) => ImagePostUpdateFormInputValues;
     onValidate?: ImagePostUpdateFormValidationValues;
 } & React.CSSProperties>;

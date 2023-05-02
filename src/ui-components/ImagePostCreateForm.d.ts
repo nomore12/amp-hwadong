@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -24,13 +24,13 @@ export declare type ImagePostCreateFormValidationValues = {
     createdAt?: ValidationFunction<string>;
     type?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ImagePostCreateFormOverridesProps = {
-    ImagePostCreateFormGrid?: FormProps<GridProps>;
-    desc?: FormProps<TextFieldProps>;
-    imgKey?: FormProps<TextFieldProps>;
-    createdAt?: FormProps<TextFieldProps>;
-    type?: FormProps<SelectFieldProps>;
+    ImagePostCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    desc?: PrimitiveOverrideProps<TextFieldProps>;
+    imgKey?: PrimitiveOverrideProps<TextFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
+    type?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type ImagePostCreateFormProps = React.PropsWithChildren<{
     overrides?: ImagePostCreateFormOverridesProps | undefined | null;
@@ -39,7 +39,6 @@ export declare type ImagePostCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: ImagePostCreateFormInputValues) => ImagePostCreateFormInputValues;
     onSuccess?: (fields: ImagePostCreateFormInputValues) => void;
     onError?: (fields: ImagePostCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: ImagePostCreateFormInputValues) => ImagePostCreateFormInputValues;
     onValidate?: ImagePostCreateFormValidationValues;
 } & React.CSSProperties>;

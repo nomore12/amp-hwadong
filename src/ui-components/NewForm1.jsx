@@ -6,14 +6,14 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { Button, Flex, Grid, TextAreaField } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { fetchByPath, validateField } from "./utils";
 export default function NewForm1(props) {
   const { onSubmit, onCancel, onValidate, onChange, overrides, ...rest } =
     props;
   const initialValues = {
-    Field0: undefined,
+    Field0: "",
   };
   const [Field0, setField0] = React.useState(initialValues.Field0);
   const [errors, setErrors] = React.useState({});
@@ -24,7 +24,15 @@ export default function NewForm1(props) {
   const validations = {
     Field0: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -65,8 +73,8 @@ export default function NewForm1(props) {
         }
         await onSubmit(modelFields);
       }}
-      {...rest}
       {...getOverrideProps(overrides, "NewForm1")}
+      {...rest}
     >
       <TextAreaField
         label="description"
@@ -96,7 +104,10 @@ export default function NewForm1(props) {
         <Button
           children="Clear"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
           {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex

@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { ImagePost } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Button,
   Flex,
@@ -16,6 +13,9 @@ import {
   SelectField,
   TextField,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { ImagePost } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 export default function ImagePostCreateForm(props) {
   const {
@@ -23,17 +23,16 @@ export default function ImagePostCreateForm(props) {
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    desc: undefined,
-    imgKey: undefined,
-    createdAt: undefined,
-    type: undefined,
+    desc: "",
+    imgKey: "",
+    createdAt: "",
+    type: "",
   };
   const [desc, setDesc] = React.useState(initialValues.desc);
   const [imgKey, setImgKey] = React.useState(initialValues.imgKey);
@@ -53,7 +52,15 @@ export default function ImagePostCreateForm(props) {
     createdAt: [],
     type: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -61,6 +68,23 @@ export default function ImagePostCreateForm(props) {
     }
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
+  };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   return (
     <Grid
@@ -99,6 +123,11 @@ export default function ImagePostCreateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(new ImagePost(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
@@ -112,13 +141,14 @@ export default function ImagePostCreateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "ImagePostCreateForm")}
+      {...rest}
     >
       <TextField
         label="Desc"
         isRequired={false}
         isReadOnly={false}
+        value={desc}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -145,6 +175,7 @@ export default function ImagePostCreateForm(props) {
         label="Img key"
         isRequired={false}
         isReadOnly={false}
+        value={imgKey}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -172,8 +203,10 @@ export default function ImagePostCreateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="datetime-local"
+        value={createdAt && convertToLocal(new Date(createdAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               desc,
@@ -187,7 +220,7 @@ export default function ImagePostCreateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(new Date(value).toISOString());
+          setCreatedAt(value);
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}
@@ -239,21 +272,16 @@ export default function ImagePostCreateForm(props) {
         <Button
           children="Clear"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
           {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
-          <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
           <Button
             children="Submit"
             type="submit"
