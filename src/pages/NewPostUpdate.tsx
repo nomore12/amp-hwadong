@@ -9,6 +9,8 @@ import * as mutations from '../graphql/mutations';
 import { getPosts, listImagePosts, getImagePost } from '../graphql/queries';
 import styled from 'styled-components';
 import { createPosts, deletePosts, updatePosts } from '../graphql/mutations';
+import { child, get, ref, set, push, update } from 'firebase/database';
+import { database } from '../firebase';
 
 const ContainerStyle = styled.div`
   width: 100%;
@@ -59,35 +61,57 @@ const NewPostUpdate = () => {
   const submitRef = useRef();
 
   async function getPost() {
-    const { results } = await Storage.list('notice/', { level: 'public' });
+    const id = params.id;
 
-    const post = await API.graphql({
-      query: getPosts,
-      variables: { id: params.id },
-    });
-    const { data } = { ...post } as any;
-    const {
-      id,
-      title,
-      desc,
-      createdAt,
-      type: postType,
-      _version,
-      filePath,
-      fileName,
-    } = data.getPosts;
-    setTitle(title);
-    setDesc(desc);
-    setCreatedAt(createdAt);
-    setType(postType);
-    setVersion(_version);
-    setPostFilePath(filePath);
-    setFilename(fileName);
+    const dbRef = ref(database);
+    get(child(dbRef, `posts/${id}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val(), id);
+          const result = snapshot.val();
+          setTitle(result.title);
+          setDesc(result.desc);
+          setCreatedAt(result.createdAt);
+          setType(result.postType);
+          setPostFilePath(result.filePath);
+          setFilename(result.fileName);
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-    const fileKey = `${postType.toLowerCase()}/${filePath}`;
-    const url = await Storage.get(fileKey);
-    const key = fileKey.split('/')[1];
-    key !== '' ? setImg(url) : setImg('');
+    // const { results } = await Storage.list('notice/', { level: 'public' });
+    //
+    // const post = await API.graphql({
+    //   query: getPosts,
+    //   variables: { id: params.id },
+    // });
+    // const { data } = { ...post } as any;
+    // const {
+    //   id,
+    //   title,
+    //   desc,
+    //   createdAt,
+    //   type: postType,
+    //   _version,
+    //   filePath,
+    //   fileName,
+    // } = data.getPosts;
+    // setTitle(title);
+    // setDesc(desc);
+    // setCreatedAt(createdAt);
+    // setType(postType);
+    // setVersion(_version);
+    // setPostFilePath(filePath);
+    // setFilename(fileName);
+    //
+    // const fileKey = `${postType.toLowerCase()}/${filePath}`;
+    // const url = await Storage.get(fileKey);
+    // const key = fileKey.split('/')[1];
+    // key !== '' ? setImg(url) : setImg('');
   }
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,31 +124,57 @@ const NewPostUpdate = () => {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
-      id: params.id,
+
+    const id = params?.id ? params.id : '000';
+    if (id === '000') return;
+
+    const postData = {
+      id: id,
       title: title,
       desc: desc,
       createdAt: createdAt,
-      type: type,
+      type: type ? type : 'none',
       filePath: postFilePath,
-      filename: filename,
-      _version: version,
+      filename: filename ? filename : 'none',
     };
 
-    const updatePost = await API.graphql({
-      query: updatePosts,
-      variables: { input: data },
-    });
+    const newPostKey = push(child(ref(database), 'posts')).key;
+    console.log(newPostKey);
+    if (newPostKey) {
+      // if(!newPostKey) return;
+      // Write the new post's data simultaneously in the posts list and the user's post list.
+      const updates: any = {};
+      updates[`/posts/${newPostKey}`] = postData;
+      // updates['/user-posts/' + id] = postData;
 
-    if (file) {
-      const { key } = await Storage.put(postFilePath, file, {
-        contentType: 'image/*',
-        level: 'public',
-        customPrefix: {
-          public: type === 'NOTICE' ? 'public/notice/' : 'public/report/',
-        },
-      });
+      return update(ref(database), updates);
     }
+
+    // const data = {
+    //   id: params.id,
+    //   title: title,
+    //   desc: desc,
+    //   createdAt: createdAt,
+    //   type: type,
+    //   filePath: postFilePath,
+    //   filename: filename,
+    //   _version: version,
+    // };
+    //
+    // const updatePost = await API.graphql({
+    //   query: updatePosts,
+    //   variables: { input: data },
+    // });
+    //
+    // if (file) {
+    //   const { key } = await Storage.put(postFilePath, file, {
+    //     contentType: 'image/*',
+    //     level: 'public',
+    //     customPrefix: {
+    //       public: type === 'NOTICE' ? 'public/notice/' : 'public/report/',
+    //     },
+    //   });
+    // }
 
     navigate(`/post/${type}`);
   };

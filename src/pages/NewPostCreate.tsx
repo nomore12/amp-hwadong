@@ -20,11 +20,9 @@ import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as mutation from '../graphql/mutations';
 import { listPosts } from '../graphql/queries';
 import { PostsCreateFormInputValues } from '../ui-components/PostsCreateForm';
-import { LazyPosts, Posts, Type } from '../models';
-import { DataStore } from '@aws-amplify/datastore';
-import * as mutations from '../graphql/mutations';
-import { createPosts } from '../graphql/mutations';
-import { getRandomKey } from 'key-maker-woongs';
+import { getDatabase, ref, set, get, child } from 'firebase/database';
+import { database } from '../firebase';
+import { v4 as uuid4 } from 'uuid';
 
 interface PropsType {
   postType: string;
@@ -65,7 +63,7 @@ const ContainerStyle = styled.div`
 `;
 
 const NewPostCreate = ({ postType }: PropsType) => {
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<any[]>([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [type, setType] = useState('ALL');
   const [startedAt, setStartedAt] = useState<string | null>(null);
@@ -78,13 +76,32 @@ const NewPostCreate = ({ postType }: PropsType) => {
   const [filename, setFilename] = useState('');
 
   const fetchPost = async () => {
-    const posts = await API.graphql({
-      query: listPosts,
-    });
-    const { data } = { ...posts } as any;
-    setList(data.listPosts.items);
-    setStartedAt(data.listPosts?.startedAt);
-    setNextToken(data.listPosts.nextToken);
+    // const posts = await API.graphql({
+    //   query: listPosts,
+    // });
+    // const { data } = { ...posts } as any;
+    // setList(data.listPosts.items);
+    // setStartedAt(data.listPosts?.startedAt);
+    // setNextToken(data.listPosts.nextToken);
+    const dbRef = ref(database);
+    get(child(dbRef, `posts/`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          const result = snapshot.val();
+          const arr = [];
+          for (const key in result) {
+            arr.push({ ...result[key], id: key });
+          }
+          console.log(arr);
+          setList([...arr]);
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   async function createPost(data: PostsCreateFormInputValues) {
@@ -114,60 +131,104 @@ const NewPostCreate = ({ postType }: PropsType) => {
     setDesc(e.target.value);
   };
 
+  async function writePostData(
+    uniqueId: string,
+    title: string,
+    desc: string,
+    createdAt: string,
+    type: string,
+    filePath: string,
+    filename: string
+  ) {
+    await set(ref(database, 'posts/' + uniqueId), {
+      title: title,
+      desc: desc,
+      createdAt: createdAt,
+      type: type,
+      filePath: '',
+      filename: filename,
+    })
+      .then((data) => console.log('write', data))
+      .catch((e) => console.log(e));
+  }
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // 인덱스 생성
-    const currList = list
-      .filter((item: any) => item.type === postType.toUpperCase())
-      .sort((prev: any, next: any) => (prev.index > next.index ? 1 : -1));
-    // @ts-ignore
-    const nextIndex = currList[currList.length - 1].index + 1;
 
     const curr = new Date();
     const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
     const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
     const created = new Date(utc + KR_TIME_DIFF).toISOString();
 
-    const uniqueKey = file ? getRandomKey() : '';
-    setFilePath(uniqueKey);
-    const newPost = await API.graphql({
-      query: mutations.createPosts,
-      variables: {
-        input: {
-          title: title,
-          desc: desc,
-          createdAt: created,
-          type: postType === 'NOTICE' ? Type.NOTICE : Type.REPORT,
-          filePath: uniqueKey,
-          filename: postType === 'REPORT' && file ? filename : '',
-          index: nextIndex,
-        },
-      },
-    });
+    const newPost = {
+      title: title,
+      desc: desc,
+      createdAt: created,
+      type: postType === 'NOTICE' ? 'NOTICE' : 'REPORT',
+      filePath: '',
+      filename: postType === 'REPORT' && file ? filename : '',
+    };
 
-    const { data } = newPost as any;
+    const uid = uuid4();
 
-    if (file) {
-      const { key } = await Storage.put(uniqueKey, file, {
-        contentType: 'image/*',
-        level: 'public',
-        customPrefix: {
-          public: postType === 'NOTICE' ? 'public/notice/' : 'public/report/',
-        },
-      });
-      setFilePath(key);
-    }
+    await writePostData(
+      uid,
+      title,
+      desc,
+      created,
+      postType === 'NOTICE' ? 'NOTICE' : 'REPORT',
+      '',
+      postType === 'REPORT' && file ? filename : ''
+    );
 
-    setTitle('');
-    setDesc('');
-    try {
-      // @ts-ignore
-      e.target[2].value = '';
-      setFile(undefined);
-    } catch (e) {
-      console.log(e);
-    }
+    return;
+
+    // 인덱스 생성
+    // const currList = list
+    //   .filter((item: any) => item.type === postType.toUpperCase())
+    //   .sort((prev: any, next: any) => (prev.index > next.index ? 1 : -1));
+    // // @ts-ignore
+    // const nextIndex = currList[currList.length - 1].index + 1;
+    //
+    // const uniqueKey = file ? getRandomKey() : '';
+    // setFilePath(uniqueKey);
+    // const newPost = await API.graphql({
+    //   query: mutations.createPosts,
+    //   variables: {
+    //     input: {
+    //       title: title,
+    //       desc: desc,
+    //       createdAt: created,
+    //       type: postType === 'NOTICE' ? Type.NOTICE : Type.REPORT,
+    //       filePath: uniqueKey,
+    //       filename: postType === 'REPORT' && file ? filename : '',
+    //       index: nextIndex,
+    //     },
+    //   },
+    // });
+
+    // const { data } = newPost as any;
+    //
+    // if (file) {
+    //   const { key } = await Storage.put(uniqueKey, file, {
+    //     contentType: 'image/*',
+    //     level: 'public',
+    //     customPrefix: {
+    //       public: postType === 'NOTICE' ? 'public/notice/' : 'public/report/',
+    //     },
+    //   });
+    //   setFilePath(key);
+    // }
+    //
+    // setTitle('');
+    // setDesc('');
+    // try {
+    //   // @ts-ignore
+    //   e.target[2].value = '';
+    //   setFile(undefined);
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
 
   useEffect(() => {
@@ -247,9 +308,9 @@ const NewPostCreate = ({ postType }: PropsType) => {
                       .sort((prev, next) =>
                         prev['createdAt'] > next['createdAt'] ? -1 : 1
                       )
-                      .filter((item) => {
-                        return item['type'] === postType && !item['_deleted'];
-                      })
+                      // .filter((item) => {
+                      //   return item['type'] === postType && !item['_deleted'];
+                      // })
                       .map((item, index) => {
                         return (
                           <TableRow key={index}>
