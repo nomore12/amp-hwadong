@@ -82,36 +82,6 @@ const NewPostUpdate = () => {
       .catch((error) => {
         console.error(error);
       });
-
-    // const { results } = await Storage.list('notice/', { level: 'public' });
-    //
-    // const post = await API.graphql({
-    //   query: getPosts,
-    //   variables: { id: params.id },
-    // });
-    // const { data } = { ...post } as any;
-    // const {
-    //   id,
-    //   title,
-    //   desc,
-    //   createdAt,
-    //   type: postType,
-    //   _version,
-    //   filePath,
-    //   fileName,
-    // } = data.getPosts;
-    // setTitle(title);
-    // setDesc(desc);
-    // setCreatedAt(createdAt);
-    // setType(postType);
-    // setVersion(_version);
-    // setPostFilePath(filePath);
-    // setFilename(fileName);
-    //
-    // const fileKey = `${postType.toLowerCase()}/${filePath}`;
-    // const url = await Storage.get(fileKey);
-    // const key = fileKey.split('/')[1];
-    // key !== '' ? setImg(url) : setImg('');
   }
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,42 +109,12 @@ const NewPostUpdate = () => {
     };
 
     const newPostKey = push(child(ref(database), 'posts')).key;
-    console.log(newPostKey);
     if (newPostKey) {
-      // if(!newPostKey) return;
-      // Write the new post's data simultaneously in the posts list and the user's post list.
       const updates: any = {};
       updates[`/posts/${newPostKey}`] = postData;
-      // updates['/user-posts/' + id] = postData;
 
       return update(ref(database), updates);
     }
-
-    // const data = {
-    //   id: params.id,
-    //   title: title,
-    //   desc: desc,
-    //   createdAt: createdAt,
-    //   type: type,
-    //   filePath: postFilePath,
-    //   filename: filename,
-    //   _version: version,
-    // };
-    //
-    // const updatePost = await API.graphql({
-    //   query: updatePosts,
-    //   variables: { input: data },
-    // });
-    //
-    // if (file) {
-    //   const { key } = await Storage.put(postFilePath, file, {
-    //     contentType: 'image/*',
-    //     level: 'public',
-    //     customPrefix: {
-    //       public: type === 'NOTICE' ? 'public/notice/' : 'public/report/',
-    //     },
-    //   });
-    // }
 
     navigate(`/post/${type}`);
   };
