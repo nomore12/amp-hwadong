@@ -81,6 +81,10 @@ const Board = ({ boardType, lists }: PropsType) => {
   const currList =
     boardType === '공지사항' ? postInfo.currNotices : postInfo.currReports;
 
+  useEffect(() => {
+    console.log('lists', lists);
+  }, []);
+
   useSubjectReplacer({
     ref: ref,
     subject: boardType,
@@ -104,13 +108,13 @@ const Board = ({ boardType, lists }: PropsType) => {
         marginBottom: '80px',
       }}>
       <ContainerStyle ref={ref} className="board">
-        {currList &&
-          currList.map((item: any, index) => {
+        {lists &&
+          lists.map((item: any, index) => {
             return (
               <ListItem
                 key={index}
-                index={item.id}
-                subject={item.subject}
+                index={index + 1}
+                subject={item.title}
                 createdAt={item.createdAt}
                 type={boardType}
                 uuid={item.uuid}

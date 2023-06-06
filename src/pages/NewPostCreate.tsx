@@ -21,7 +21,12 @@ import * as mutation from '../graphql/mutations';
 import { listPosts } from '../graphql/queries';
 import { PostsCreateFormInputValues } from '../ui-components/PostsCreateForm';
 import { getDatabase, ref, set, get, child } from 'firebase/database';
-import { database } from '../firebase';
+import {
+  uploadBytes,
+  ref as storageRef,
+  getDownloadURL,
+} from 'firebase/storage';
+import { database, storage } from '../firebase';
 import { v4 as uuid4 } from 'uuid';
 
 interface PropsType {
@@ -138,14 +143,31 @@ const NewPostCreate = ({ postType }: PropsType) => {
     createdAt: string,
     type: string,
     filePath: string,
-    filename: string
+    filename: string,
+    file?: File
   ) {
+    let uploadFile = '';
+    if (file) {
+      const fileRef = storageRef(storage, 'posts/' + filename);
+      await uploadBytes(fileRef, file).then((snapshot) => {
+        console.log(snapshot);
+      });
+
+      await getDownloadURL(fileRef)
+        .then((url: any) => {
+          uploadFile = url;
+        })
+        .then((data) => console.log('download', data));
+
+      console.log(uploadFile);
+    }
+
     await set(ref(database, 'posts/' + uniqueId), {
       title: title,
       desc: desc,
       createdAt: createdAt,
       type: type,
-      filePath: '',
+      filePath: uploadFile ? uploadFile : '',
       filename: filename,
     })
       .then((data) => console.log('write', data))
@@ -171,6 +193,7 @@ const NewPostCreate = ({ postType }: PropsType) => {
 
     const uid = uuid4();
 
+    console.log('file', filename, file);
     await writePostData(
       uid,
       title,
@@ -178,10 +201,9 @@ const NewPostCreate = ({ postType }: PropsType) => {
       created,
       postType === 'NOTICE' ? 'NOTICE' : 'REPORT',
       '',
-      postType === 'REPORT' && file ? filename : ''
+      postType === 'REPORT' && file ? filename : '',
+      file
     );
-
-    return;
 
     // 인덱스 생성
     // const currList = list
@@ -220,15 +242,15 @@ const NewPostCreate = ({ postType }: PropsType) => {
     //   setFilePath(key);
     // }
     //
-    // setTitle('');
-    // setDesc('');
-    // try {
-    //   // @ts-ignore
-    //   e.target[2].value = '';
-    //   setFile(undefined);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    setTitle('');
+    setDesc('');
+    try {
+      // @ts-ignore
+      e.target[2].value = '';
+      setFile(undefined);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {

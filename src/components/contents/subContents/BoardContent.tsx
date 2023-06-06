@@ -9,6 +9,8 @@ import { changeCurr, changeSubject, changeText } from '../../../store/Slice';
 import { API, graphqlOperation, Storage } from 'aws-amplify';
 import * as queries from 'src/graphql/queries';
 import FileSaver, { saveAs } from 'file-saver';
+import { child, get, ref } from 'firebase/database';
+import { database } from '../../../firebase';
 
 interface PropsType {
   id?: number;
@@ -75,6 +77,11 @@ const BoardContent = () => {
   const [pdfKey, setPdfKey] = useState('');
   const [filename, setFilename] = useState('');
   const [tmpUrl, setTmpUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [desc, setDesc] = useState('');
+  const [createdAt, setCreatedAt] = useState('');
+  const [postFilePath, setPostFilePath] = useState('');
+  const [uuid, setUuid] = useState('');
 
   const eventListener = () => {
     dispatch(changeCurr('archive'));
@@ -87,25 +94,48 @@ const BoardContent = () => {
   };
 
   const fetchPost = async () => {
-    const post = await API.graphql({
-      query: queries.getPosts,
-      variables: { id: param.id },
-    });
-    const { data } = { ...post } as any;
-    setContentData(data.getPosts);
-    setLoading(false);
-    setType(data.getPosts.type);
-    setFilename(data.getPosts.filename);
-    const fileKey = `${data.getPosts.type?.toLowerCase()}/${
-      data.getPosts.filePath
-    }`;
+    const id = param.id;
 
-    const url = await Storage.get(fileKey);
-    type === 'REPORT' && setPdfKey(fileKey);
-    const key = fileKey.split('/');
+    const dbRef = ref(database);
+    get(child(dbRef, `posts/${id}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const result = snapshot.val();
+          console.log('result', result);
+          setTitle(result.title);
+          setDesc(result.desc);
+          setCreatedAt(result.createdAt);
+          setType(result.postType);
+          setPostFilePath(result.filePath);
+          setFilename(result.filename);
+          setUuid(result.uuid);
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-    if (key[1] === '' || key[1] === 'null') setImgUrl('');
-    else setImgUrl(url);
+    // const post = await API.graphql({
+    //   query: queries.getPosts,
+    //   variables: { id: param.id },
+    // });
+    // const { data } = { ...post } as any;
+    // setContentData(data.getPosts);
+    // setLoading(false);
+    // setType(data.getPosts.type);
+    // setFilename(data.getPosts.filename);
+    // const fileKey = `${data.getPosts.type?.toLowerCase()}/${
+    //   data.getPosts.filePath
+    // }`;
+    //
+    // const url = await Storage.get(fileKey);
+    // type === 'REPORT' && setPdfKey(fileKey);
+    // const key = fileKey.split('/');
+    //
+    // if (key[1] === '' || key[1] === 'null') setImgUrl('');
+    // else setImgUrl(url);
   };
 
   const downloadFile = async (key: string) => {
@@ -144,7 +174,7 @@ const BoardContent = () => {
 
   useEffect(() => {
     animateScroll.scrollToTop();
-    // fetchPost();
+    fetchPost();
 
     dispatch(changeCurr('archive'));
     dispatch(changeText('back'));
@@ -176,10 +206,10 @@ const BoardContent = () => {
       <>
         <ListItem
           index={currList[0].id}
-          subject={currList[0].subject}
-          createdAt={currList[0].createdAt}
-          type={'연간사업보고'}
-          uuid={currList[0].uuid}
+          subject={title}
+          createdAt={createdAt}
+          type={type}
+          uuid={uuid}
         />
         {/*{type === 'NOTICE' ? (*/}
         {/*  <div>{imgUrl && <img className="notice-img" src={imgUrl} />}</div>*/}
@@ -190,19 +220,28 @@ const BoardContent = () => {
           onMouseEnter={(e) => onMouseEnter(e, ' ')}
           onMouseLeave={(e) => onMouseLeave(e, 'back')}>
           {/*<a href={tmpUrl}>download</a>*/}
-          <button
+
+          <a
             className="link pdf-download"
-            onClick={async () => {
-              await downloadFile(pdfKey);
-            }}>
-            파일 다운로드
-          </button>
+            href={postFilePath}
+            target="_blank"
+            rel="noreferrer">
+            {filename}
+          </a>
+          {/*<button*/}
+          {/*  className="link pdf-download"*/}
+          {/*  onClick={async () => {*/}
+          {/*    await downloadFile(pdfKey);*/}
+          {/*  }}>*/}
+          {/*  파일 다운로드*/}
+          {/*</button>*/}
         </div>
         {/*)}*/}
         <p className="board-content-area">
-          {location.pathname.includes('2021')
-            ? '본 재단 홈페이지 리뉴얼로 인해 재게재합니다.'
-            : ''}
+          {desc}
+          {/*{location.pathname.includes('2021')*/}
+          {/*  ? '본 재단 홈페이지 리뉴얼로 인해 재게재합니다.'*/}
+          {/*  : ''}*/}
         </p>
         {/*<p className="board-content-area">{'dddd'}</p>*/}
       </>

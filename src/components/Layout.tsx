@@ -44,6 +44,8 @@ import {
 import notice from './content/Notice';
 import hongImg from 'src/components/assets/images/hong.png';
 import onjiumImg from 'src/components/assets/images/onjium.png';
+import { child, get, ref } from 'firebase/database';
+import { database } from '../firebase';
 
 // @ts-ignore
 const ContainerStyle = styled(motion.div)<{ color: string }>`
@@ -196,9 +198,11 @@ const Layout = () => {
   const location = useLocation();
   const params = useParams();
   const [innderWidth, setinnerWidth] = useState(0);
-  const postList = useFetchPost();
-  const noticeList = postList.filter((item: any) => item['type'] === 'NOTICE');
-  const reportList = postList.filter((item: any) => item['type'] === 'REPORT');
+  // const postList = useFetchPost();
+  // const noticeList = postList.filter((item: any) => item['type'] === 'NOTICE');
+  // const reportList = postList.filter((item: any) => item['type'] === 'REPORT');
+  const [noticeList, setNoticeList] = useState<any[]>([]);
+  const [reportList, setReportList] = useState<any[]>([]);
 
   const backToMainPage = (e: React.MouseEvent<HTMLDivElement>) => {
     if (cursor.curr === 'main' || isMobile) return;
@@ -220,6 +224,37 @@ const Layout = () => {
       navigate('/main');
     }
   };
+
+  useEffect(() => {
+    const dbRef = ref(database);
+    get(child(dbRef, 'posts'))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const result = snapshot.val();
+          console.log('result', result);
+          const notice = [];
+          const report = [];
+          for (const key in result) {
+            if (result[key].type === 'NOTICE') {
+              result[key]['uuid'] = key;
+              notice.push(result[key]);
+              // setNoticeList([...noticeList, result[key]]);
+            } else if (result[key].type === 'REPORT') {
+              result[key]['uuid'] = key;
+              report.push(result[key]);
+              // setReportList([...reportList, result[key]]);
+            }
+          }
+          setNoticeList(notice);
+          setReportList(report);
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   useEffect(() => {
     const pos = localStorage.getItem('curr');
@@ -259,12 +294,12 @@ const Layout = () => {
     setinnerWidth(width);
   }, [window.innerWidth]);
 
-  useEffect(() => {
-    dispatch(setNotices(noticeList));
-    dispatch(setReports(reportList));
-    dispatch(setCurrNoticeIndex(1));
-    dispatch(setCurrReportIndex(1));
-  }, [postList]);
+  // useEffect(() => {
+  //   dispatch(setNotices(noticeList));
+  //   dispatch(setReports(reportList));
+  //   dispatch(setCurrNoticeIndex(1));
+  //   dispatch(setCurrReportIndex(1));
+  // }, [postList]);
 
   return (
     <ContainerStyle
@@ -333,12 +368,13 @@ const Layout = () => {
                 <p className="mobile-subject">연간 사업보고</p>
                 <section id="연간사업보고">
                   <ContentContainer>
-                    {
-                      <ReportBoard
-                        boardType="연간사업보고"
-                        lists={reportList}
-                      />
-                    }
+                    <Board lists={reportList} boardType="연간사업보고" />
+                    {/*{*/}
+                    {/*  <ReportBoard*/}
+                    {/*    boardType="연간사업보고"*/}
+                    {/*    lists={reportList}*/}
+                    {/*  />*/}
+                    {/*}*/}
                   </ContentContainer>
                 </section>
               </div>
