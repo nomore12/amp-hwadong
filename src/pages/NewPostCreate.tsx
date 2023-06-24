@@ -330,6 +330,9 @@ const NewPostCreate = ({ postType }: PropsType) => {
                       .sort((prev, next) =>
                         prev['createdAt'] > next['createdAt'] ? -1 : 1
                       )
+                      .filter((item) => {
+                        return item['type'] === postType;
+                      })
                       // .filter((item) => {
                       //   return item['type'] === postType && !item['_deleted'];
                       // })

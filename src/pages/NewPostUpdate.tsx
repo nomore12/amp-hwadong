@@ -9,8 +9,9 @@ import * as mutations from '../graphql/mutations';
 import { getPosts, listImagePosts, getImagePost } from '../graphql/queries';
 import styled from 'styled-components';
 import { createPosts, deletePosts, updatePosts } from '../graphql/mutations';
-import { child, get, ref, set, push, update } from 'firebase/database';
+import { child, get, ref, set, push, update, remove } from 'firebase/database';
 import { database } from '../firebase';
+import { data } from 'autoprefixer';
 
 const ContainerStyle = styled.div`
   width: 100%;
@@ -120,15 +121,16 @@ const NewPostUpdate = () => {
   };
 
   const onDelete = async () => {
-    try {
-      const deletedTodo = await API.graphql({
-        query: deletePosts,
-        variables: { input: { id: params.id, _version: version } },
-      });
-    } catch (e) {
-      console.log('delete error: ', e);
-    }
-    navigate(`/post/${type}`);
+    const id = params?.id ? params.id : '000';
+    if (id === '000') return;
+
+    const deleteRef = ref(database, 'posts/' + id);
+    await remove(deleteRef);
+    console.log(type);
+
+    alert('삭제되었습니다.');
+
+    navigate(`/login`);
   };
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,6 +148,7 @@ const NewPostUpdate = () => {
 
   useEffect(() => {
     getPost();
+    console.log('type', type);
   }, []);
 
   return (
